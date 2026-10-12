@@ -1,0 +1,17 @@
+# Archivos binarios pesados: Git LFS
+*.blend filter=lfs diff=lfs merge=lfs -text
+*.fbx filter=lfs diff=lfs merge=lfs -text
+*.glb filter=lfs diff=lfs merge=lfs -text
+*.npy filter=lfs diff=lfs merge=lfs -text
+*.tif filter=lfs diff=lfs merge=lfs -text
+*.gz filter=lfs diff=lfs merge=lfs -text
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text
+*.webp filter=lfs diff=lfs merge=lfs -text
+datos/**/*.json filter=lfs diff=lfs merge=lfs -text
+datos/**/*.csv filter=lfs diff=lfs merge=lfs -text
+
+# Texto
+*.py text eol=lf
+*.md text eol=lf
+*.ps1 text eol=crlf

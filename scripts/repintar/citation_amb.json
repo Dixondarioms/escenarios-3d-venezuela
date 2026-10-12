@@ -1,0 +1,23 @@
+{
+  "original": "C:/UE/Recursos/modelos_usuario/_originales/avion_jet/1990_cessna_citation_texture_detailed_exterior.glb",
+  "salida": "C:/UE/Recursos/modelos_usuario/avion_jet/cessna_citation_amb.glb",
+  "trabajo": "C:/UE/Recursos/modelos_usuario/_repintar/citation_amb",
+  "nota": "repintado con esquema de la Aviación Militar Bolivariana por el proyecto Escenarios 3D",
+  "material": "Material.001",
+  "girar": -90,
+  "dividir": false,
+  "tam_textura": 2048,
+  "marca_opacidad": 0.95,
+  "pintura": [
+    {"tipo": "color", "color": [238, 240, 241], "suave": 2.5,
+     "donde": {"caja_simetrica": [[0, -0.47, -0.06], [9, -0.33, 0.02]], "brillo_max": 0.9}},
+    {"tipo": "color", "color": [238, 240, 241], "conservar_sombreado": true, "suave": 2.0,
+     "donde": {"caja_simetrica": [[0, -1.2, 0.12], [9, -0.5, 0.6]], "tono": [170, 260], "sat_min": 0.15}}
+  ],
+  "marcas": [
+    {"tipo": "bandera", "centro": [-0.81, 0.19], "tam": [0.065, 0.36], "px": [120, 660], "giro": 17.5},
+    {"tipo": "texto", "texto": "0002", "color": [20, 30, 60], "centro": [-0.68, 0.13], "tam": [0.10, 0.032], "px": [400, 128]},
+    {"tipo": "texto", "texto": "AVIACIÓN MILITAR BOLIVARIANA", "color": [18, 42, 110], "centro": [0.09, 0.018], "tam": [0.34, 0.017], "px": [1600, 80]},
+    {"tipo": "bandera", "centro": [-0.28, -0.02], "tam": [0.075, 0.048], "px": [300, 192]}
+  ]
+}

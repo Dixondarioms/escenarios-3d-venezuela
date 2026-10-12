@@ -1,0 +1,16 @@
+# Entorno de Python (se recrea: ver docs/01_instalacion.md)
+.venv/
+__pycache__/
+*.pyc
+
+# Copias de seguridad automáticas de Blender
+*.blend1
+*.blend2
+
+# Descargas crudas en caché (los scripts 01b y 02 las vuelven a bajar)
+datos/_ms_cache/
+datos/_dem_cache/
+
+# Sistema
+Thumbs.db
+desktop.ini

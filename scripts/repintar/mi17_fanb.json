@@ -1,0 +1,23 @@
+{
+  "original": "C:/UE/Recursos/modelos_usuario/_originales/helicoptero/mil_mi-17.glb",
+  "salida": "C:/UE/Recursos/modelos_usuario/helicoptero/mil_mi-17_fanb.glb",
+  "trabajo": "C:/UE/Recursos/modelos_usuario/_repintar/mi17_fanb",
+  "nota": "repintado con esquema FANB por el proyecto Escenarios 3D",
+  "material": "Body1Mtl",
+  "girar": 0,
+  "dividir": true,
+  "tam_textura": 2048,
+  "paso_mapa": 0.12,
+  "tolerancia": 1.0,
+  "marca_opacidad": 0.92,
+  "pintura": [
+    {"tipo": "camuflaje_remapeo", "salvia": [116, 131, 108], "verde_oscuro": [60, 78, 56], "arena": [168, 155, 122],
+     "arena_escala": 8.0, "arena_umbral": 0.6, "borrar_rojo": {"caja_simetrica": [[0, -21, -7], [99, 0, 2]]}}
+  ],
+  "marcas": [
+    {"tipo": "texto", "texto": "FANB", "color": [22, 22, 22], "centro": [-15.3, -2.9], "tam": [4.3, 1.7], "px": [430, 170]},
+    {"tipo": "bandera", "centro": [-27.6, 3.1], "tam": [1.6, 1.05], "px": [320, 210]},
+    {"tipo": "texto", "texto": "61120", "color": [22, 22, 22], "centro": [-40.2, 2.8], "tam": [3.6, 1.25], "px": [432, 150]},
+    {"tipo": "bandera", "centro": [-62.7, 6.4], "tam": [1.5, 1.0], "px": [300, 200]}
+  ]
+}

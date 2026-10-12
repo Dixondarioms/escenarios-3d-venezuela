@@ -1,0 +1,32 @@
+{
+  "carpeta": "C:/UE/Recursos",
+  "resolucion": "2k",
+  "nota": "Todo es CC0 de Poly Haven (polyhaven.com). 'material' es el nombre del material en Blender/Unreal que usa la textura.",
+  "texturas": {
+    "asphalt_02": "M_Asfalto",
+    "concrete_floor_worn_001": "M_Acera",
+    "rough_concrete": "M_Brocal",
+    "concrete_pavement_02": "M_Sendero",
+    "concrete_tiles_02": "M_Plaza",
+    "leafy_grass": "M_Grama",
+    "concrete_floor_painted": "M_Cancha",
+    "red_laterite_soil_stones": "M_Terreno",
+    "bitumen": "M_Techo",
+    "concrete_floor_02": "M_Techo_Concreto",
+    "painted_plaster_wall": "M_Fachada_Friso",
+    "white_plaster_02": "M_Fachada_Casa",
+    "beige_wall_001": "M_Fachada_Beige",
+    "grey_plaster": "M_Fachada_Comercial",
+    "red_brick_03": "M_Fachada_Ladrillo",
+    "rectangular_facade_tiles": "M_Fachada_Ceramica",
+    "concrete_wall_008": "M_Fachada_Concreto",
+    "white_rough_plaster": "M_Monumento",
+    "painted_metal_shutter": "M_Santamaria",
+    "palm_bark": "M_Corteza_Palma",
+    "bark_brown_02": "M_Corteza",
+    "corrugated_iron": "M_Zinc"
+  },
+  "modelos": ["jacaranda_tree", "metal_trash_can", "water_manhole_cover", "fire_hydrant", "grass_bermuda_01", "grass_medium_02"],
+  "resolucion_modelos": { "grass_bermuda_01": "1k", "grass_medium_02": "1k" },
+  "hdris": ["kloofendal_48d_partly_cloudy_puresky"]
+}
