@@ -576,11 +576,11 @@ def materiales_hitos(tx):
     color = suciedad_fachada(g, color)
     u, v, _ = g.xyz(g.uv("UV0"))
     celdas_mural = g.nuevo("ShaderNodeTexVoronoi", distance="CHEBYCHEV")
-    celdas_mural.inputs["Scale"].default_value = 0.12
+    celdas_mural.inputs["Scale"].default_value = 0.09
     g.unir(g.uv("UV0", (1.0, 1.0)), celdas_mural.inputs["Vector"])
     tono = rampa_constante(g, g.xyz(celdas_mural.outputs["Color"])[0],
                            [(0.92, 0.72, 0.05), (0.05, 0.22, 0.6), (0.92, 0.92, 0.9), (0.75, 0.12, 0.08), (0.1, 0.45, 0.75)])
-    en_mural = g.math("MULTIPLY", g.math("GREATER_THAN", v, 2.5), g.math("LESS_THAN", v, 14.0))
+    en_mural = g.math("MULTIPLY", g.math("GREATER_THAN", v, 1.2), g.math("LESS_THAN", v, 17.0))
     g.unir(g.mezcla(en_mural, color, tono), p.inputs["Base Color"])
     material_simple("M_Losa_Blanca", (0.84, 0.84, 0.82), 0.6)
     material_simple("M_Antepecho", (0.9, 0.9, 0.88), 0.45)

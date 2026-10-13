@@ -1003,7 +1003,7 @@ def unefa(m, anillo, base, techo, frente, color, piso=3.3, prof_torre=21.0, modu
             tubo(m, [(*p0, z + 1.0), (*p1, z + 1.0)], 0.03, "M_Metal_Oscuro", lados=4)
         z += piso
     # pabellón al frente: muro de vidrio bajo un techo plegado (dientes de sierra a lo largo de la fachada)
-    f0, f1 = f_frente, min(hf, f_frente + 18.0)
+    f0, f1 = f_frente, min(hf, f_frente + 11.0)
     caja_local(m, c, ea, ef, -hl + 2, hl - 2, f0, f1 - 2.5, base, base + 4.2, "M_Vidrio_Local", tapa=False, z_uv=base)
     paso = 9.0
     k_max = int((largo - 4) / paso)

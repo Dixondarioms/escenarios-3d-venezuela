@@ -124,7 +124,8 @@
       "Cam_Torre": { "pos": [-640, -60, 12], "mira": [-693, 7, 14], "lente": 24 },
       "Cam_UNEFA_Calle": { "pos": [-1051, -152, 1.7], "ojo": true, "mira": [-1051, -215, 24], "mira_suelo": true, "lente": 18 },
       "Cam_UNEFA_Pasarela": { "pos": [-1040, -150, 1.7], "ojo": true, "mira": [-1115, -152, 5], "mira_suelo": true, "lente": 20 },
-      "Cam_Cubo_Negro": { "pos": [-1062, -142, 1.7], "ojo": true, "mira": [-1057, -80, 16], "mira_suelo": true, "lente": 18 },
+      "Cam_Cubo_Negro": { "pos": [-990, -145, 1.7], "ojo": true, "mira": [-1052, -88, 20], "mira_suelo": true, "lente": 20 },
+      "Cam_CCCT": { "pos": [-1160, -150, 40], "mira": [-1300, -10, 8], "mira_suelo": true, "lente": 24 },
       "Cam_UNEFA_Azotea": { "pos": [-995, -216.5, 1.7], "azotea": true, "mira": [-450, 150, 10], "mira_suelo": true, "lente": 20 },
       "Cam_UNEFA_Azotea_Norte": { "pos": [-1040, -216.5, 1.7], "azotea": true, "mira": [-1150, 600, 120], "mira_suelo": true, "lente": 20 },
       "Cam_Cerca": { "pos": [-128.2, 379.1, 1.7], "ojo": true, "mira": [-159.0, 374.9, 1.6], "mira_suelo": true, "lente": 28 }
