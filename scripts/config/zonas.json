@@ -97,6 +97,22 @@
     "fondo": { "radio_m": 14000, "resolucion_m": 50 },
     "ciudad_lejana": { "radio_m": 7000, "area_min_m2": 60 },
     "detalle": { "centro": [-700.0, 80.0], "radio_m": 300 },
+    "detalles_extra": [ { "centro": [-1080.0, -160.0], "radio_m": 200, "nota": "Chuao: UNEFA, Cubo Negro y CCCT" } ],
+    "hitos": {
+      "w382327814": { "nombre": "Sede UNEFA (Av. La Estancia, Chuao)", "modelo": "unefa", "altura": 64,
+                      "mira_hacia": [-1051, -120], "retiro_atras": 22,
+                      "letrero": { "texto": "UNEFA", "material": "M_Letras", "alto": 1.3 },
+                      "letrero_techo": { "texto": "UNEFA", "material": "M_Letrero_Rojo", "alto": 3.5 },
+                      "nota": "Torre-placa de quiebrasoles con pabellón de techo plegado al frente (fotos de Street View, jul 2022)" },
+      "w153815545": { "nombre": "Centro Banaven (Cubo Negro)", "modelo": "cubo_negro", "mira_hacia": [-1051, -160] },
+      "w718186161": { "nombre": "Pirámide Invertida (CCCT)", "modelo": "piramide_invertida", "altura": 30 },
+      "w153825237": { "nombre": "CCCT (centro comercial)", "material": "M_Mural_CCCT", "altura": 20 },
+      "w718186160": { "nombre": "Torre A (CCCT)", "material": "M_Franjas_Gris" },
+      "w718186159": { "nombre": "Torre B (CCCT)", "material": "M_Franjas_Gris" },
+      "w718186158": { "nombre": "Torre C (CCCT)", "material": "M_Franjas_Gris" },
+      "w153825214": { "nombre": "Torre IBM", "material": "M_Franjas_Gris" },
+      "w153815542": { "nombre": "Torre Las Mercedes", "material": "M_Franjas_Gris" }
+    },
     "pasto": { "color": "verde", "rayas_angulo": -12.4, "nota": "La grama de la base se mantiene verde todo el año; franjas paralelas a la pista 11/29" },
     "render": { "fecha": "2026-03-15", "hora": "11:30", "muestras": 96, "porcentaje": 70, "exposicion": -1.5 },
     "camaras": {
@@ -106,6 +122,11 @@
       "Cam_Plataforma": { "pos": [-709, 34, 1.7], "ojo": true, "mira": [0, -100, 5], "lente": 22 },
       "Cam_Aeronaves": { "pos": [770, -165, 1.7], "ojo": true, "mira": [870, -95, 2], "lente": 26 },
       "Cam_Torre": { "pos": [-640, -60, 12], "mira": [-693, 7, 14], "lente": 24 },
+      "Cam_UNEFA_Calle": { "pos": [-1051, -152, 1.7], "ojo": true, "mira": [-1051, -215, 24], "mira_suelo": true, "lente": 18 },
+      "Cam_UNEFA_Pasarela": { "pos": [-1040, -150, 1.7], "ojo": true, "mira": [-1115, -152, 5], "mira_suelo": true, "lente": 20 },
+      "Cam_Cubo_Negro": { "pos": [-1062, -142, 1.7], "ojo": true, "mira": [-1057, -80, 16], "mira_suelo": true, "lente": 18 },
+      "Cam_UNEFA_Azotea": { "pos": [-995, -216.5, 1.7], "azotea": true, "mira": [-450, 150, 10], "mira_suelo": true, "lente": 20 },
+      "Cam_UNEFA_Azotea_Norte": { "pos": [-1040, -216.5, 1.7], "azotea": true, "mira": [-1150, 600, 120], "mira_suelo": true, "lente": 20 },
       "Cam_Cerca": { "pos": [-128.2, 379.1, 1.7], "ojo": true, "mira": [-159.0, 374.9, 1.6], "mira_suelo": true, "lente": 28 }
     }
   }

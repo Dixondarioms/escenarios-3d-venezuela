@@ -957,6 +957,136 @@ def edificio_balcones(m, anillo, base, techo, color, piso=3.0, vuelo=1.3):
         z += piso
 
 
+# ---------------------------------------------------------------- Chuao: UNEFA, Cubo Negro, CCCT
+
+def caja_local(m, c, ea, ef, a0, a1, f0, f1, z0, z1, mat, color=(1, 1, 1, 1), tapa=True, z_uv=None):
+    """Prisma rectangular en los ejes locales (ea, ef) de un edificio: a = a lo ancho, f = hacia el frente."""
+    def P(a, f):
+        return (c[0] + ea[0] * a + ef[0] * f, c[1] + ea[1] * a + ef[1] * f)
+    an = [P(a0, f0), P(a1, f0), P(a1, f1), P(a0, f1)]
+    prisma_anillo(m, an, z0, z1, mat, color, tapa=mat if tapa is True else tapa, z_uv=z_uv)
+    return an
+
+
+def unefa(m, anillo, base, techo, frente, color, piso=3.3, prof_torre=21.0, modulo=2.7, retiro_atras=0.0):
+    """Sede UNEFA (Av. La Estancia, Chuao): torre-placa de ~19 pisos con fachada de quiebrasoles de concreto
+    (aletas verticales cada 2,7 m + losas voladas en cada piso), muros de vidrio verdoso detrás, balcones en
+    las culatas, y un pabellón de un piso al frente con techo plegado en zigzag y el nombre en letras."""
+    c, ea, ef, ha, hf = ejes_hacia(anillo, frente)
+    largo = 2 * ha * 0.96
+    hl = largo / 2
+    f_atras = -hf + retiro_atras        # la torre ocupa el fondo del terreno
+    f_frente = f_atras + prof_torre
+    z_torre0 = base + 5.5               # sobre el pabellón
+    # cuerpo de la torre (vidrio y antepechos) y azotea
+    caja_local(m, c, ea, ef, -hl, hl, f_atras, f_frente, base, techo, "M_Franjas_Verde", color, tapa="M_Techo_Concreto", z_uv=base)
+    # losas voladas en cada piso (todo el perímetro) y aletas verticales en las dos fachadas largas
+    an = [(c[0] + ea[0] * a + ef[0] * f, c[1] + ea[1] * a + ef[1] * f)
+          for a, f in ((-hl, f_atras), (hl, f_atras), (hl, f_frente), (-hl, f_frente))]
+    z = z_torre0
+    while z < techo - 0.5:
+        losa_volada(m, an, z, 1.0, 0.22, "M_Quiebrasol")
+        z += piso
+    losa_volada(m, an, techo, 1.0, 0.5, "M_Quiebrasol")  # cornisa
+    n = int(largo / modulo)
+    for k in range(n + 1):
+        a = -hl + k * largo / n
+        for f_cara, signo in ((f_frente, 1), (f_atras, -1)):
+            f_a, f_b = sorted((f_cara, f_cara + signo * 1.0))
+            caja_local(m, c, ea, ef, a - 0.12, a + 0.12, f_a, f_b, z_torre0, techo, "M_Quiebrasol", tapa=False)
+    # balcones con baranda en las culatas (fachadas cortas)
+    z = z_torre0
+    while z < techo - 1.0:
+        for a_cara, signo in ((hl, 1), (-hl, -1)):
+            p0 = (c[0] + ea[0] * (a_cara + signo * 1.4) + ef[0] * f_atras, c[1] + ea[1] * (a_cara + signo * 1.4) + ef[1] * f_atras)
+            p1 = (c[0] + ea[0] * (a_cara + signo * 1.4) + ef[0] * f_frente, c[1] + ea[1] * (a_cara + signo * 1.4) + ef[1] * f_frente)
+            tubo(m, [(*p0, z + 1.0), (*p1, z + 1.0)], 0.03, "M_Metal_Oscuro", lados=4)
+        z += piso
+    # pabellón al frente: muro de vidrio bajo un techo plegado (dientes de sierra a lo largo de la fachada)
+    f0, f1 = f_frente, min(hf, f_frente + 18.0)
+    caja_local(m, c, ea, ef, -hl + 2, hl - 2, f0, f1 - 2.5, base, base + 4.2, "M_Vidrio_Local", tapa=False, z_uv=base)
+    paso = 9.0
+    k_max = int((largo - 4) / paso)
+    z_alero, z_cumbre = base + 4.4, base + 6.4
+    for k in range(k_max):
+        a0 = -hl + 2 + k * (largo - 4) / k_max
+        a1 = a0 + (largo - 4) / k_max
+        am = (a0 + a1) / 2
+
+        def P(a, f, zz):
+            return (c[0] + ea[0] * a + ef[0] * f, c[1] + ea[1] * a + ef[1] * f, zz)
+        for (aa, za), (ab, zb) in (((a0, z_alero), (am, z_cumbre)), ((am, z_cumbre), (a1, z_alero))):
+            L = math.dist((aa, za), (ab, zb))
+            m.cara([P(aa, f1, za), P(ab, f1, zb), P(ab, f0, zb), P(aa, f0, za)],
+                   [(0, 0), (L, 0), (L, f1 - f0), (0, f1 - f0)], "M_Techo_Plegado")
+            m.cara([P(aa, f1, za - 0.25), P(ab, f1, zb - 0.25), P(ab, f1, zb), P(aa, f1, za)],
+                   [(0, 0), (L, 0), (L, 0.25), (0, 0.25)], "M_Techo_Plegado")
+        # hastial triangular del frente (cierra el pliegue)
+        m.cara([P(a0, f1, z_alero), P(a1, f1, z_alero), P(am, f1, z_cumbre)][::-1],
+               [(0, 0), (1, 0), (0.5, 1)][::-1], "M_Techo_Plegado")
+        # columnas bajo los valles
+        q = P(a0, f1 - 1.0, base)
+        tubo(m, [q, (q[0], q[1], z_alero)], 0.18, "M_Quiebrasol", lados=8)
+    centro_frente = (c[0] + ef[0] * (f1 + 0.05), c[1] + ef[1] * (f1 + 0.05))
+    esquina_techo = (c[0] + ea[0] * (-hl + 14) + ef[0] * (f_frente - 1.0), c[1] + ea[1] * (-hl + 14) + ef[1] * (f_frente - 1.0))
+    return centro_frente, ef, z_alero - 0.1, esquina_techo, techo
+
+
+def cubo_negro(m, anillo, base, techo, frente, color, retiro=4.0, alto_pb=7.0):
+    """Centro Banaven (Cubo Negro): volumen de vidrio negro espejado sobre una planta baja retirada con
+    columnas cilíndricas negras y una franja dentada en el borde del voladizo."""
+    c, ea, ef, ha, hf = ejes_hacia(anillo, frente)
+    caja_local(m, c, ea, ef, -ha, ha, -hf, hf, base + alto_pb, techo, "M_Vidrio_Negro", color, tapa="M_Techo_Concreto", z_uv=base)
+    caja_local(m, c, ea, ef, -ha + retiro, ha - retiro, -hf + retiro, hf - retiro, base, base + alto_pb, "M_Vidrio_Negro", color,
+               tapa=False, z_uv=base)
+    # cara inferior del voladizo (plafón claro) y franja dentada oscura
+    def P(a, f):
+        return (c[0] + ea[0] * a + ef[0] * f, c[1] + ea[1] * a + ef[1] * f)
+    m.cara([(*P(-ha, -hf), base + alto_pb), (*P(-ha, hf), base + alto_pb), (*P(ha, hf), base + alto_pb), (*P(ha, -hf), base + alto_pb)],
+           [(0, 0), (0, 1), (1, 1), (1, 0)], "M_Antepecho")
+    an = [P(-ha, -hf), P(ha, -hf), P(ha, hf), P(-ha, hf)]
+    losa_volada(m, an, base + alto_pb + 0.9, 0.35, 0.9, "M_Metal_Oscuro")
+    # columnas cilíndricas en el retiro
+    for lado_a in (-1, 1):
+        for k in range(7):
+            f = -hf + retiro / 2 + k * (2 * hf - retiro) / 6
+            q = P(lado_a * (ha - retiro / 2), f)
+            tubo(m, [(q[0], q[1], base), (q[0], q[1], base + alto_pb)], 0.55, "M_Metal_Oscuro", lados=12)
+    for lado_f in (-1, 1):
+        for k in range(1, 6):
+            a = -ha + retiro / 2 + k * (2 * ha - retiro) / 6
+            q = P(a, lado_f * (hf - retiro / 2))
+            tubo(m, [(q[0], q[1], base), (q[0], q[1], base + alto_pb)], 0.55, "M_Metal_Oscuro", lados=12)
+
+
+def piramide_invertida(m, anillo, base, techo, color, abajo=0.62):
+    """Pirámide Invertida del CCCT: volumen que se ensancha hacia arriba (base reducida al 62 %)."""
+    c, eu, ev, hu, hv = rectangulo_orientado(anillo)
+    def P(a, f, s):
+        return (c[0] + (eu[0] * a + ev[0] * f) * s, c[1] + (eu[1] * a + ev[1] * f) * s)
+    esquinas = [(-hu, -hv), (hu, -hv), (hu, hv), (-hu, hv)]
+    z_quiebre = base + 4.0
+    abajo_an = [P(a, f, abajo) for a, f in esquinas]
+    arriba_an = [P(a, f, 1.0) for a, f in esquinas]
+    prisma_anillo(m, abajo_an, base, z_quiebre, "M_Vidrio_Local", color, z_uv=base)
+    for (a, b), (a2, b2) in zip(zip(abajo_an, abajo_an[1:] + abajo_an[:1]), zip(arriba_an, arriba_an[1:] + arriba_an[:1])):
+        L = math.dist(a2, b2)
+        m.cara([(*a, z_quiebre), (*b, z_quiebre), (*b2, techo), (*a2, techo)],
+               [(0, 0), (L, 0), (L, techo - z_quiebre), (0, techo - z_quiebre)], "M_Vidrio_Oficina", color=color)
+    m.cara([(*p, z_quiebre) for p in abajo_an][::-1], [p for p in abajo_an][::-1], "M_Concreto_Claro", color=color)
+    cx, cy = c
+    for a, b in zip(arriba_an, arriba_an[1:] + arriba_an[:1]):
+        m.cara([(cx, cy, techo), (*a, techo), (*b, techo)], [(cx, cy), a, b], "M_Techo_Concreto", color=color)
+
+
+def torre_escalera(m, x, y, z0, z1, eje, mat="M_Concreto_Claro"):
+    """Torre de escalera/rampa de concreto en el extremo de una pasarela (5 × 7 m, con ventanas ranura)."""
+    a, b = (eje[0] * 2.5, eje[1] * 2.5), (-eje[1] * 3.5, eje[0] * 3.5)
+    an = [(x - a[0] - b[0], y - a[1] - b[1]), (x + a[0] - b[0], y + a[1] - b[1]),
+          (x + a[0] + b[0], y + a[1] + b[1]), (x - a[0] + b[0], y - a[1] + b[1])]
+    prisma_anillo(m, an, z0 - 0.3, z1 + 1.2, mat, tapa=mat, z_uv=z0)
+
+
 def torre_control(m, anillo, base, alto, mat_fuste):
     """Fuste de concreto + cabina de vidrio volada 1 m + losa de techo."""
     z_cab = base + alto - 5.0

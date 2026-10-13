@@ -274,15 +274,16 @@ def construir_edificio(ed, terreno, celdas, rnd, props, zona_detalle):
         return None
     estilo = detalle.estilo_de(ed["tipo"])
     mat_fachada = detalle.elegir_fachada(estilo, rnd)
-    dx, dy = cx - zona_detalle["centro"][0], cy - zona_detalle["centro"][1]
+    hito = HITOS.get(ed.get("id"))
+    if hito and hito.get("material"):
+        mat_fachada = hito["material"]
     hangar = estilo == "hangar"
-    con_detalle = math.hypot(dx, dy) < zona_detalle["radio_m"] and not hangar
+    con_detalle = en_zona_detalle(cx, cy, zona_detalle) and not hangar and not (hito and hito.get("material"))
     # A = 1: ventanas modeladas o sin ventanas (el material no las dibuja); A = 0: el material las pinta
     color = (rnd.random(), (list(detalle.ESTILOS).index(estilo) + 1) / 10.0, min(ed["niveles"] / 50.0, 1.0),
              1.0 if con_detalle or hangar else 0.0)
     m = celdas.malla("Edificios", cx, cy)
 
-    hito = HITOS.get(ed.get("id"))
     if hito and hito.get("altura"):
         techo = min(suelos) + hito["altura"]
     if hito and hito.get("modelo", "normal") != "normal":
@@ -360,7 +361,7 @@ def construir_edificio(ed, terreno, celdas, rnd, props, zona_detalle):
         m.cara([(x, y, techo) for x, y in pts], [(x, y) for x, y in pts], mat_techo, color=color)
     if hito and hito.get("letrero_techo"):  # letras sobre la azotea, mirando hacia la plaza
         lt = hito["letrero_techo"]
-        c0, ea, ef, ha, hf = detalle.ejes_hacia(ext, PLAZA)
+        c0, ea, ef, ha, hf = detalle.ejes_hacia(ext, tuple(hito.get("mira_hacia", PLAZA)))
         p = (c0[0] + ef[0] * (hf - 2.0), c0[1] + ef[1] * (hf - 2.0))
         letrero_en(m, [[lt["texto"], lt.get("material", "M_Letrero_Rojo")]], lt.get("alto", 2.0), 0.3, p, ef,
                    techo + alto_pretil + 0.6)
@@ -373,6 +374,12 @@ def construir_edificio(ed, terreno, celdas, rnd, props, zona_detalle):
 # Edificios emblemáticos de zonas.json ("hitos": {id OSM: {...}}) y punto hacia el que miran sus fachadas
 HITOS = {}
 PLAZA = (0.0, 0.0)
+# Zonas de detalle adicionales ("detalles_extra": [{"centro": [x, y], "radio_m": r}, ...])
+DETALLES_EXTRA = []
+
+
+def en_zona_detalle(x, y, zona_detalle):
+    return any(math.hypot(x - d["centro"][0], y - d["centro"][1]) < d["radio_m"] for d in [zona_detalle] + DETALLES_EXTRA)
 
 
 def construir_hito(ed, hito, ext, base, techo, m, color):
@@ -380,9 +387,27 @@ def construir_hito(ed, hito, ext, base, techo, m, color):
     color = (color[0], color[1], color[2], 0.0)  # A = 0: las fachadas lisas dibujan ventanas
     modelo = hito["modelo"]
     letrero = hito.get("letrero")
+    frente = tuple(hito.get("mira_hacia", PLAZA))
     if modelo == "torre_escalonada":
-        detalle.torre_escalonada(m, ext, base, PLAZA, hito["escalones"], hito.get("material", "M_Franjas_Azul"), color,
+        detalle.torre_escalonada(m, ext, base, frente, hito["escalones"], hito.get("material", "M_Franjas_Azul"), color,
                                  hito.get("aletas"))
+    elif modelo == "unefa":
+        ancla, ef, z_letras, esquina, z_techo = detalle.unefa(m, ext, base, techo, frente, color,
+                                                              retiro_atras=hito.get("retiro_atras", 0.0))
+        if letrero:
+            letrero_en(m, [[letrero["texto"], letrero.get("material", "M_Letras")]], letrero.get("alto", 1.4), 0.2,
+                       ancla, ef, z_letras - letrero.get("alto", 1.4) - 0.3)
+        lt = hito.get("letrero_techo")
+        if lt:
+            letrero_en(m, [[lt["texto"], lt.get("material", "M_Letrero_Rojo")]], lt.get("alto", 3.5), 0.4, esquina, ef,
+                       z_techo + 0.8)
+            for s in (-6, 0, 6):
+                q = (esquina[0] + (-ef[1]) * s, esquina[1] + ef[0] * s)
+                detalle.tubo(m, [(q[0], q[1], z_techo), (q[0], q[1], z_techo + 0.8 + lt.get("alto", 3.5))], 0.07, "M_Metal_Oscuro")
+    elif modelo == "cubo_negro":
+        detalle.cubo_negro(m, ext, base, techo, frente, color)
+    elif modelo == "piramide_invertida":
+        detalle.piramide_invertida(m, ext, base, techo, color)
     elif modelo == "torre_marco":
         ancla, frente, z = detalle.torre_marco(m, ext, base, techo, PLAZA, color)
         if letrero:
@@ -439,6 +464,9 @@ def nodos_interseccion(vias):
 
 def altura_via(v, terreno, puntos):
     off = Z_SENDERO if v["tipo"] in TIPOS_SENDERO else Z_CALLE.get(v["tipo"].replace("_link", ""), Z_CALLE_DEFECTO)
+    if v["puente"] and v["tipo"] in TIPOS_SENDERO:
+        # pasarela peatonal: tablero horizontal a 6 m sobre lo más alto que cruza (torres de escalera en los extremos)
+        return [max(terreno.z(*p) for p in puntos) + 6.0] * len(puntos)
     if v["puente"]:
         za, zb = terreno.z(*puntos[0]), terreno.z(*puntos[-1])
         s = longitudes(puntos)
@@ -448,6 +476,57 @@ def altura_via(v, terreno, puntos):
         return [max(z, terreno.z(*p) + 5.0) if 0 < i < len(puntos) - 1 else z
                 for i, (p, z) in enumerate(zip(puntos, zs))]
     return [terreno.z(*p) + off for p in puntos]
+
+
+def estructura_puente(puntos, normales, zs, medio_ancho, peatonal, terreno, celdas):
+    """Tablero con espesor (cara inferior y cantos), barandas de concreto y pilas donde el tablero va alto.
+    Las pasarelas peatonales llevan antepechos de 1,1 m y torres de escalera en los extremos."""
+    grosor = 0.6 if peatonal else 1.3
+    alto_bar, ancho_bar = (1.1, 0.15) if peatonal else (0.85, 0.3)
+    mat_bar = "M_Concreto_Claro" if peatonal else "M_Brocal"
+    m = celdas.malla("Detalles", *puntos[len(puntos) // 2])
+    for lado in (1, -1):
+        bordes = [(p[0] + n[0] * medio_ancho * lado, p[1] + n[1] * medio_ancho * lado) for p, n in zip(puntos, normales)]
+        s = 0.0
+        for i in range(len(puntos) - 1):
+            a, b = bordes[i], bordes[i + 1]
+            L = math.dist(a, b)
+            za, zb = zs[i], zs[i + 1]
+            # canto del tablero
+            q = [(*a, za - grosor), (*b, zb - grosor), (*b, zb), (*a, za)]
+            m.cara(q if lado < 0 else q[::-1], [(s, 0), (s + L, 0), (s + L, grosor), (s, grosor)][:: 1 if lado < 0 else -1], "M_Concreto_Claro")
+            s += L
+        # baranda de concreto a lo largo del borde
+        normales_b = [(n[0] * lado, n[1] * lado) for n in normales]
+        hacia_adentro = [(-n[0], -n[1]) for n in normales_b]
+        detalle.extruir_polilinea(m, [(p[0] - n[0] * ancho_bar / 2, p[1] - n[1] * ancho_bar / 2) for p, n in zip(bordes, normales_b)],
+                                  hacia_adentro, [z + 0.1 for z in zs], ancho_bar, alto_bar, mat_bar)
+    # cara inferior
+    izq = [(p[0] + n[0] * medio_ancho, p[1] + n[1] * medio_ancho) for p, n in zip(puntos, normales)]
+    der = [(p[0] - n[0] * medio_ancho, p[1] - n[1] * medio_ancho) for p, n in zip(puntos, normales)]
+    for i in range(len(puntos) - 1):
+        m.cara([(*izq[i], zs[i] - grosor), (*izq[i + 1], zs[i + 1] - grosor), (*der[i + 1], zs[i + 1] - grosor), (*der[i], zs[i] - grosor)],
+               [(0, 0), (1, 0), (1, 1), (0, 1)], "M_Concreto_Claro")
+    # pilas (cada ~30 m donde el tablero está a más de 3 m del suelo)
+    s_total = longitudes(puntos)
+    siguiente = 15.0
+    for i, p in enumerate(puntos):
+        if s_total[i] < siguiente:
+            continue
+        siguiente = s_total[i] + 30.0
+        suelo = terreno.z(*p)
+        if zs[i] - grosor - suelo < 3.0 or 0 in (i,) or i == len(puntos) - 1:
+            continue
+        d = normales[i]
+        ancho_pila = medio_ancho * (0.5 if peatonal else 0.7)
+        detalle.caja(m, p[0], p[1], suelo - 0.5, zs[i] - grosor, ancho_pila if peatonal else 0.9, d, "M_Concreto_Claro")
+    if peatonal:
+        for i, j in ((0, 1), (-1, -2)):
+            p, q = puntos[i], puntos[j]
+            L = math.dist(p, q) or 1.0
+            eje = ((q[0] - p[0]) / L, (q[1] - p[1]) / L)
+            x, y = p[0] - eje[0] * 2.5, p[1] - eje[1] * 2.5
+            detalle.torre_escalera(m, x, y, terreno.z(x, y), zs[i], eje)
 
 
 def construir_via(v, terreno, celdas, intersecciones, props):
@@ -477,6 +556,8 @@ def construir_via(v, terreno, celdas, intersecciones, props):
         uv1 = [(0, s[i]), (0, s[i + 1]), (1, s[i + 1]), (1, s[i])]
         celdas.malla(capa, (x0 + x1) / 2, (y0 + y1) / 2).cara(quad, uv0, mat, uv1=uv1, color=color)
 
+    if v["puente"]:
+        estructura_puente(puntos, normales, zs, medio_ancho, sendero, terreno, celdas)
     if sendero or v["puente"] or v["tipo"] not in TIPOS_CON_ACERA or v["acera"] in ("no", "none"):
         return
     lados = {"left": [1], "right": [-1]}.get(v["acera"], [1, -1])
@@ -1304,6 +1385,8 @@ COLORES_VISTA = {  # vista rápida en Blender; 03b_realismo.py los reemplaza por
     "M_Franjas_Azul": (0.35, 0.45, 0.62), "M_Franjas_Blanca": (0.62, 0.63, 0.63), "M_Muro_Cortina": (0.04, 0.05, 0.06),
     "M_Concreto_Claro": (0.8, 0.79, 0.76), "M_Fachada_Gris": (0.7, 0.71, 0.72), "M_Losa_Blanca": (0.84, 0.84, 0.82),
     "M_Antepecho": (0.9, 0.9, 0.88), "M_Letrero_Rojo": (0.7, 0.03, 0.03), "M_Letrero_Azul": (0.06, 0.2, 0.52),
+    "M_Franjas_Verde": (0.4, 0.46, 0.43), "M_Franjas_Gris": (0.45, 0.45, 0.43), "M_Quiebrasol": (0.78, 0.78, 0.75),
+    "M_Techo_Plegado": (0.5, 0.55, 0.45), "M_Vidrio_Negro": (0.02, 0.02, 0.025), "M_Mural_CCCT": (0.6, 0.6, 0.58),
 }
 
 
@@ -1331,6 +1414,7 @@ def main():
     props = props_osm(osm, terreno, osm["vias"])
     zona_detalle = zona.get("detalle", {"centro": [0, 0], "radio_m": 0})
     HITOS.update(zona.get("hitos", {}))
+    DETALLES_EXTRA.extend(zona.get("detalles_extra", []))
     global PLAZA
     PLAZA = tuple(zona_detalle["centro"])
     aerodromos = [a["exterior"] for a in osm["areas"] if a["tipo"] == "aerodromo"]

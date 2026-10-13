@@ -554,6 +554,34 @@ def materiales_hitos(tx):
     g, p, color = pbr("M_Fachada_Gris", tex, macro=0.06, tinte=(0.82, 0.83, 0.84, 1))
     color = suciedad_fachada(g, color)
     ventanas_pintadas(g, p, color)
+    # Chuao: UNEFA, Cubo Negro, CCCT
+    material_franjas("M_Franjas_Verde", (0.10, 0.17, 0.15), (0.70, 0.71, 0.68), 3.3, 0.62, modulo=1.35)
+    material_franjas("M_Franjas_Gris", (0.03, 0.04, 0.045), (0.62, 0.61, 0.58), 3.4, 0.42)
+    g, p, color = pbr("M_Quiebrasol", tex, macro=0.1, tinte=(1.05, 1.04, 1.0, 1))
+    g.unir(suciedad_fachada(g, color), p.inputs["Base Color"])
+    g, p, color = pbr("M_Techo_Plegado", tex, macro=0.25, tinte=(0.62, 0.68, 0.55, 1))  # concreto con moho verdoso
+    g.unir(color, p.inputs["Base Color"])
+    mat = material("M_Vidrio_Negro")
+    g = Nodos(mat)
+    p, _ = g.principled()
+    u, v, _ = g.xyz(g.uv("UV0"))
+    junta = g.math("MAXIMUM", g.math("LESS_THAN", g.math("FRACT", g.math("DIVIDE", u, 1.6)), 0.02),
+                   g.math("LESS_THAN", g.math("FRACT", g.math("DIVIDE", v, 1.6)), 0.02))
+    g.unir(g.mezcla(junta, (0.008, 0.008, 0.01, 1), (0.05, 0.05, 0.055, 1)), p.inputs["Base Color"])
+    p.inputs["Metallic"].default_value = 0.9
+    g.unir(g.mezcla_f(junta, 0.02, 0.4), p.inputs["Roughness"])
+    # concreto gris del CCCT con el mural geométrico (amarillo, azul, rojo, blanco) en la parte baja
+    tex_c = tx.de("M_Fachada_Concreto") or tex
+    g, p, color = pbr("M_Mural_CCCT", tex_c, macro=0.1, tinte=(0.95, 0.94, 0.9, 1))
+    color = suciedad_fachada(g, color)
+    u, v, _ = g.xyz(g.uv("UV0"))
+    celdas_mural = g.nuevo("ShaderNodeTexVoronoi", distance="CHEBYCHEV")
+    celdas_mural.inputs["Scale"].default_value = 0.12
+    g.unir(g.uv("UV0", (1.0, 1.0)), celdas_mural.inputs["Vector"])
+    tono = rampa_constante(g, g.xyz(celdas_mural.outputs["Color"])[0],
+                           [(0.92, 0.72, 0.05), (0.05, 0.22, 0.6), (0.92, 0.92, 0.9), (0.75, 0.12, 0.08), (0.1, 0.45, 0.75)])
+    en_mural = g.math("MULTIPLY", g.math("GREATER_THAN", v, 2.5), g.math("LESS_THAN", v, 14.0))
+    g.unir(g.mezcla(en_mural, color, tono), p.inputs["Base Color"])
     material_simple("M_Losa_Blanca", (0.84, 0.84, 0.82), 0.6)
     material_simple("M_Antepecho", (0.9, 0.9, 0.88), 0.45)
     material_simple("M_Letrero_Rojo", (0.7, 0.03, 0.03), 0.4)
@@ -1927,11 +1955,12 @@ def main():
     z = terreno.z
     dg = bpy.context.evaluated_depsgraph_get()
 
-    def ojo(x, y, alto=1.65):
-        """Altura de los ojos de un peatón sobre la superficie real (acera, plaza, calle)."""
+    def ojo(x, y, alto=1.65, en_azotea=False):
+        """Altura de los ojos de un peatón sobre la superficie real (acera, plaza, calle) o, con en_azotea,
+        sobre el techo del edificio que haya en ese punto."""
         from mathutils import Vector
         hit, loc, _, _, obj, _ = escena.ray_cast(dg, Vector((x, y, 3000.0)), Vector((0, 0, -1)))
-        while hit and obj.name.startswith(("Edificios", "Fondo")):  # no pararse en techos
+        while hit and obj.name.startswith(("Edificios", "Fondo") if not en_azotea else ("Fondo",)):  # no pararse en techos
             hit, loc, _, _, obj, _ = escena.ray_cast(dg, loc - Vector((0, 0, 0.05)), Vector((0, 0, -1)))
         return (x, y, (loc.z if hit else z(x, y)) + alto)
 
@@ -1940,7 +1969,7 @@ def main():
     objetos_cam = {}
     for nombre, c in config_cams.items():
         x, y, h = c["pos"]
-        pos = ojo(x, y, h) if c.get("ojo") else (x, y, z(0, 0) + h)
+        pos = ojo(x, y, h, c.get("azotea", False)) if c.get("ojo") or c.get("azotea") else (x, y, z(0, 0) + h)
         mx, my, mh = c["mira"]
         mz = z(mx, my) + mh if c.get("mira_suelo") else z(0, 0) + mh  # "mira_suelo": altura sobre el terreno de ese punto
         objetos_cam[nombre] = camara(nombre, pos, (mx, my, mz), c.get("lente", 24), cams)
