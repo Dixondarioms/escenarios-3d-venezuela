@@ -1169,6 +1169,87 @@ def torre_escalera(m, x, y, z0, z1, eje, mat="M_Concreto_Claro"):
     prisma_anillo(m, an, z0 - 0.3, z1 + 1.2, mat, tapa=mat, z_uv=z0)
 
 
+# ---------------------------------------------------------------- Base Aérea El Libertador (BAEL)
+
+def torre_ajedrez(m, c, ef, z0, lado=6.0, alto_fuste=15.0, piso=3.0):
+    """Torre de control de la BAEL: fuste cuadrado en damero rojo y blanco (dos columnas por cara, una franja
+    por piso) con ventanas oscuras, piso de servicio con balcón, cabina de vidrio oscuro con marco rojo,
+    techo con baranda y antenas, y escalera exterior roja en el costado izquierdo."""
+    ea = (ef[1], -ef[0])                     # a lo ancho (derecha mirando de frente)
+    h = lado / 2
+
+    def P(a, f, z):
+        return (c[0] + ea[0] * a + ef[0] * f, c[1] + ea[1] * a + ef[1] * f, z)
+    caras = [((-h, h), (h, h)), ((h, h), (h, -h)), ((h, -h), (-h, -h)), ((-h, -h), (-h, h))]  # frente, der., atrás, izq.
+    pisos = int(alto_fuste // piso)
+    for i, ((a0, f0), (a1, f1)) in enumerate(caras):
+        for k in range(pisos):
+            za, zb = z0 + k * piso, z0 + (k + 1) * piso
+            for col in range(2):
+                t0, t1 = col / 2, (col + 1) / 2
+                pa = (a0 + (a1 - a0) * t0, f0 + (f1 - f0) * t0)
+                pb = (a0 + (a1 - a0) * t1, f0 + (f1 - f0) * t1)
+                rojo = (k + col + i) % 2 == 0
+                mat = "M_Pintura_Roja" if rojo else "M_Pintura_Blanca"
+                m.cara([P(*pa, za), P(*pb, za), P(*pb, zb), P(*pa, zb)], [(0, 0), (1, 0), (1, 1), (0, 1)], mat)
+                # ventanas en la columna derecha del frente y de los costados (pisos 2 en adelante)
+                if k >= 1 and i in (0, 1, 3) and col == (0 if i == 0 else 1):
+                    nx, ny = -(f1 - f0), (a1 - a0)   # hacia afuera de la cara
+                    L = math.hypot(nx, ny) or 1.0
+                    nx, ny = nx / L * 0.03, ny / L * 0.03
+                    va = (pa[0] + (pb[0] - pa[0]) * 0.12 + nx, pa[1] + (pb[1] - pa[1]) * 0.12 + ny)
+                    vb = (pa[0] + (pb[0] - pa[0]) * 0.88 + nx, pa[1] + (pb[1] - pa[1]) * 0.88 + ny)
+                    m.cara([P(*va, za + 0.7), P(*vb, za + 0.7), P(*vb, zb - 0.4), P(*va, zb - 0.4)],
+                           [(0, 0), (1, 0), (1, 1), (0, 1)], "M_Vidrio_Oficina")
+    zt = z0 + pisos * piso
+    # piso de servicio (más ancho) con balcón rojo
+    caja_local(m, c, ea, ef, -h - 0.4, h + 0.4, -h - 0.4, h + 0.4, zt, zt + 0.35, "M_Pintura_Roja")
+    caja_local(m, c, ea, ef, -h, h, -h, h, zt + 0.35, zt + 3.0, "M_Pintura_Blanca", tapa=False)
+    for (a0, f0), (a1, f1) in caras:
+        tubo(m, [P(a0 * 1.07, f0 * 1.07, zt + 1.4), P(a1 * 1.07, f1 * 1.07, zt + 1.4)], 0.04, "M_Pintura_Roja", lados=4)
+    # cabina: losa roja, vidrio oscuro, marco y techo rojos
+    zc = zt + 3.0
+    caja_local(m, c, ea, ef, -h - 0.8, h + 0.8, -h - 0.8, h + 0.8, zc, zc + 0.5, "M_Pintura_Roja")
+    caja_local(m, c, ea, ef, -h - 0.5, h + 0.5, -h - 0.5, h + 0.5, zc + 0.5, zc + 3.0, "M_Vidrio_Negro", tapa=False)
+    for sa in (-1, 1):
+        for sf in (-1, 1):
+            q = P(sa * (h + 0.5), sf * (h + 0.5), zc + 0.5)
+            tubo(m, [q, (q[0], q[1], zc + 3.0)], 0.12, "M_Pintura_Roja", lados=4)
+    caja_local(m, c, ea, ef, -h - 0.9, h + 0.9, -h - 0.9, h + 0.9, zc + 3.0, zc + 3.6, "M_Pintura_Roja")
+    for (a0, f0), (a1, f1) in caras:
+        tubo(m, [P(a0 * 1.13, f0 * 1.13, zc + 4.6), P(a1 * 1.13, f1 * 1.13, zc + 4.6)], 0.04, "M_Pintura_Roja", lados=4)
+    for sa, sf, alto in ((-0.6, -0.4, 4.5), (0.3, 0.5, 3.0), (0.8, -0.7, 2.2)):  # antenas y radomos
+        q = P(sa * h, sf * h, zc + 3.6)
+        tubo(m, [q, (q[0], q[1], zc + 3.6 + alto)], 0.05, "M_Metal_Galvanizado", lados=4)
+    # escalera exterior roja en el costado izquierdo (visto de frente): caja angosta con descansos y barandas
+    caja_local(m, c, ea, ef, h + 0.1, h + 1.6, -h + 0.8, h - 0.8, z0, zt, "M_Pintura_Roja", tapa=False)
+    k = 0
+    while z0 + k * piso < zt:
+        z = z0 + k * piso + 1.0
+        tubo(m, [P(h + 1.75, -h + 0.8, z), P(h + 1.75, h - 0.8, z)], 0.04, "M_Metal_Oscuro", lados=4)
+        k += 1
+    return zc + 3.6
+
+
+def edificio_bael(m, c, ef, z0, largo=26.0, fondo=11.0, alto=4.6, letras=None):
+    """Edificio de operaciones junto a la torre: blanco, ventanas corridas oscuras, franja roja abajo y
+    pretil alto donde van las letras (BAEL)."""
+    ea = (ef[1], -ef[0])
+    hl, hf = largo / 2, fondo / 2
+    caja_local(m, c, ea, ef, -hl, hl, -hf, hf, z0, z0 + alto, "M_Pintura_Blanca", tapa="M_Techo_Concreto")
+    caja_local(m, c, ea, ef, -hl - 0.02, hl + 0.02, -hf - 0.02, hf + 0.02, z0, z0 + 0.6, "M_Pintura_Roja", tapa=False)
+
+    def P(a, f, z):
+        return (c[0] + ea[0] * a + ef[0] * f, c[1] + ea[1] * a + ef[1] * f, z)
+    # ventanas corridas en el frente
+    for a0, a1 in ((-hl + 1.2, -2.0), (0.0, hl - 1.2)):
+        m.cara([P(a0, hf + 0.03, z0 + 1.2), P(a1, hf + 0.03, z0 + 1.2), P(a1, hf + 0.03, z0 + 3.2), P(a0, hf + 0.03, z0 + 3.2)],
+               [(0, 0), (1, 0), (1, 1), (0, 1)], "M_Vidrio_Oficina")
+    # alero rojo sobre la entrada
+    caja_local(m, c, ea, ef, -2.0, 0.0, hf, hf + 1.8, z0 + 2.7, z0 + 2.9, "M_Pintura_Roja")
+    return P(-hl * 0.35, hf + 0.05, z0 + alto - 1.0)
+
+
 def torre_control(m, anillo, base, alto, mat_fuste):
     """Fuste de concreto + cabina de vidrio volada 1 m + losa de techo."""
     z_cab = base + alto - 5.0

@@ -461,6 +461,22 @@ def en_zona_detalle(x, y, zona_detalle):
     return any(math.hypot(x - d["centro"][0], y - d["centro"][1]) < d["radio_m"] for d in [zona_detalle] + DETALLES_EXTRA)
 
 
+def construir_extra(x, terreno, celdas, props):
+    """Edificios que no están en ningún dato (zonas.json → "edificios_extra"): se ubican por centro y por la
+    dirección de su frente ("frente_grados" desde el Este, sentido antihorario)."""
+    cx, cy = x["centro"]
+    ang = math.radians(x.get("frente_grados", 90.0))
+    ef = (math.cos(ang), math.sin(ang))
+    z0 = terreno.z(cx, cy) - 0.3
+    m = celdas.malla("Edificios", cx, cy)
+    if x["modelo"] == "torre_ajedrez":
+        detalle.torre_ajedrez(m, (cx, cy), ef, z0, lado=x.get("lado", 6.0), alto_fuste=x.get("alto_fuste", 15.0))
+    elif x["modelo"] == "edificio_bael":
+        ancla = detalle.edificio_bael(m, (cx, cy), ef, z0, x.get("largo", 26.0), x.get("fondo", 11.0), x.get("alto", 4.6))
+        if x.get("letras"):
+            letrero_en(m, [[x["letras"], x.get("material_letras", "M_Metal_Oscuro")]], 1.1, 0.12, ancla[:2], ef, ancla[2] - 0.3)
+
+
 def construir_hito(ed, hito, ext, base, techo, m, color):
     """Edificios con forma propia (ver detalle.py): torre_escalonada, torre_marco, torre_arcos, balcones."""
     color = (color[0], color[1], color[2], 0.0)  # A = 0: las fachadas lisas dibujan ventanas
@@ -1378,13 +1394,37 @@ def elegir_aeronave(rnd):
     return TIPOS_AERONAVE[-1][0]
 
 
+def puestos_en_plataforma(osm, rnd, separacion=42.0, ocupacion=0.55):
+    """Si OSM no trae puestos de estacionamiento: una fila de puestos en cada plataforma, paralela a su lado
+    largo y a 45 m del borde más cercano a la pista (más de la mitad ocupados)."""
+    pistas = [a["puntos"] for a in osm.get("aerovias", []) if a["tipo"] == "runway"]
+    puestos = []
+    for a in osm["areas"]:
+        if a["tipo"] != "plataforma":
+            continue
+        anillo = a["exterior"]
+        c, eu, ev, hu, hv = detalle.rectangulo_orientado(anillo)
+        if pistas:  # ev apunta hacia la pista más cercana
+            q = min((p for pista in pistas for p in pista), key=lambda p: math.dist(p, c))
+            if (q[0] - c[0]) * ev[0] + (q[1] - c[1]) * ev[1] < 0:
+                ev = (-ev[0], -ev[1])
+        fila = hv - 45.0
+        s = -hu + separacion / 2
+        while s < hu:
+            x = c[0] + eu[0] * s + ev[0] * fila
+            y = c[1] + eu[1] * s + ev[1] * fila
+            if dentro_poligono(x, y, anillo) and rnd.random() < ocupacion:
+                puestos.append({"tipo": "puesto_aeronave", "x": round(x, 2), "y": round(y, 2)})
+            s += separacion
+    return puestos
+
+
 def props_aeronaves(osm, terreno, rnd):
     """Aeronaves en los puestos de estacionamiento, con la nariz hacia la pista más cercana."""
     pistas = [a["puntos"] for a in osm.get("aerovias", []) if a["tipo"] == "runway"]
     salida = []
-    for p in osm["puntos"]:
-        if p["tipo"] != "puesto_aeronave":
-            continue
+    puestos = [p for p in osm["puntos"] if p["tipo"] == "puesto_aeronave"] or puestos_en_plataforma(osm, rnd)
+    for p in puestos:
         rumbo = rnd.uniform(0, 360)
         if pistas:
             cercano = min((q for pista in pistas for q in densificar(pista, 20.0)), key=lambda q: math.dist(q, (p["x"], p["y"])))
@@ -1455,7 +1495,7 @@ COLORES_VISTA = {  # vista rápida en Blender; 03b_realismo.py los reemplaza por
     "M_Pintura_Blanca": (0.9, 0.9, 0.88), "M_Zinc": (0.6, 0.62, 0.63), "M_Pasto": (0.12, 0.3, 0.06),
     "M_Pintura_Amarilla": (0.85, 0.6, 0.05), "M_Marca_Espera": (0.85, 0.6, 0.05),
     "M_Hangar_Pared": (0.82, 0.8, 0.74), "M_Muro_Cerca": (0.62, 0.61, 0.58), "M_Barrotes": (0.03, 0.03, 0.03),
-    "M_Metal_Oscuro": (0.04, 0.045, 0.05), "M_Baranda": (0.03, 0.03, 0.03),
+    "M_Metal_Oscuro": (0.04, 0.045, 0.05), "M_Baranda": (0.03, 0.03, 0.03), "M_Pintura_Roja": (0.62, 0.05, 0.04),
     "M_Relieve": (0.75, 0.63, 0.48), "M_Placa": (0.22, 0.14, 0.07), "M_Piedra_Fuente": (0.5, 0.4, 0.3),
     "M_Azulejo": (0.06, 0.47, 0.48), "M_Agua_Fuente": (0.05, 0.36, 0.4), "M_Chorro": (0.85, 0.92, 0.95),
     "M_Cortina_Agua": (0.8, 0.88, 0.92), "M_Letras": (0.86, 0.86, 0.84), "M_Corazon": (0.72, 0.02, 0.03),
@@ -1499,6 +1539,15 @@ def main():
     PLAZA = tuple(zona_detalle["centro"])
     aerodromos = [a["exterior"] for a in osm["areas"] if a["tipo"] == "aerodromo"]
     puntos_rodaje = [q for a in osm.get("aerovias", []) for q in densificar(a["puntos"], 10.0)]
+    extras = zona.get("edificios_extra", [])
+    if extras:  # los edificios modelados a mano reemplazan a los aproximados que caigan encima
+        antes = len(osm["edificios"])
+        osm["edificios"] = [e for e in osm["edificios"] if not any(
+            math.dist((sum(p[0] for p in e["exterior"]) / len(e["exterior"]), sum(p[1] for p in e["exterior"]) / len(e["exterior"])),
+                      tuple(x["centro"])) < x.get("despejar_m", 30.0) for x in extras)]
+        print(f"  Edificios a mano: {len(extras)} (reemplazan {antes - len(osm['edificios'])} aproximados)")
+        for x in extras:
+            construir_extra(x, terreno, celdas, props)
     for ed in osm["edificios"]:
         if aerodromos and ed["tipo"] in ("yes", "military", "hangar"):
             ed = edificio_de_base(ed, aerodromos, puntos_rodaje)

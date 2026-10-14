@@ -1017,6 +1017,7 @@ def crear_materiales(tx, carpeta, zona):
     material_plataforma(tx)
     material_simple("M_Pintura_Blanca", (0.75, 0.75, 0.72), 0.6)
     material_simple("M_Pintura_Amarilla", (0.8, 0.56, 0.04), 0.6)
+    material_simple("M_Pintura_Roja", (0.62, 0.05, 0.04), 0.55)
     material_simple("M_Luz_Pista", (0.9, 0.9, 0.85), 0.1, emision=((1.0, 0.95, 0.8), 3.0))
     material_simple("M_Luz_Umbral", (0.1, 0.6, 0.2), 0.1, emision=((0.1, 1.0, 0.3), 3.0))
     material_simple("M_Luz_Rodaje", (0.05, 0.15, 0.7), 0.1, emision=((0.1, 0.3, 1.0), 3.0))
