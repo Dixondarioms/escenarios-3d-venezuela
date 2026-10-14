@@ -14,68 +14,442 @@
     "filtro_dsm_px": 5,
     "suavizado_terreno_m": 12,
     "ondulacion_geoide_m": null,
-    "inicio_jugador": { "x": 0.0, "y": -25.0 },
-    "fondo": { "radio_m": 14000, "resolucion_m": 50 },
-    "ciudad_lejana": { "radio_m": 7000, "area_min_m2": 60 },
-    "detalle": { "centro": [0.0, 0.0], "radio_m": 170 },
-    "render": { "fecha": "2026-03-15", "hora": "09:30", "muestras": 96, "porcentaje": 70 },
-    "plaza": { "patron": "bandas_ladrillo", "modulo_m": 6.0, "banda_m": 0.65,
-               "nota": "Plaza Francia: losas de concreto beige con bandas de ladrillo rojo (fotos de 2016-2017)" },
-    "flores": { "densidad_m2": 2.0, "tipos": [["canna_roja", 0.5], ["canna_amarilla", 0.35]],
-                "nota": "Macizos de cannas rojas y amarillas en las jardineras de la zona de detalle" },
+    "inicio_jugador": {
+      "x": 0.0,
+      "y": -25.0
+    },
+    "fondo": {
+      "radio_m": 14000,
+      "resolucion_m": 50
+    },
+    "ciudad_lejana": {
+      "radio_m": 7000,
+      "area_min_m2": 60
+    },
+    "detalle": {
+      "centro": [
+        0.0,
+        0.0
+      ],
+      "radio_m": 170
+    },
+    "render": {
+      "fecha": "2026-03-15",
+      "hora": "09:30",
+      "muestras": 96,
+      "porcentaje": 70
+    },
+    "plaza": {
+      "patron": "bandas_ladrillo",
+      "modulo_m": 6.0,
+      "banda_m": 0.65,
+      "nota": "Plaza Francia: losas de concreto beige con bandas de ladrillo rojo (fotos de 2016-2017)"
+    },
+    "flores": {
+      "densidad_m2": 2.0,
+      "tipos": [
+        [
+          "canna_roja",
+          0.5
+        ],
+        [
+          "canna_amarilla",
+          0.35
+        ]
+      ],
+      "nota": "Macizos de cannas rojas y amarillas en las jardineras de la zona de detalle"
+    },
     "plaza_hundida": {
       "nota": "Bajada al Metro Altamira (acceso Plaza Norte): cascada desde el espejo de agua, escaleras, puente y foso con estanque",
-      "hueco": [-13.0, 21.5, -101.0, -70.0],
-      "y_cascada": [-70.0, -84.0], "x_cascada": [-2.2, 10.0],
-      "escaleras_x": [[-4.3, -2.2], [10.0, 13.2]],
-      "terrazas_x": [[-13.0, -4.3], [13.2, 21.5]],
-      "puente_y": [-84.0, -87.5], "foso_y": [-87.5, -99.0], "estanque": [-1.7, 9.6, -96.4, -87.5],
-      "nivel_puente": -3.0, "nivel_foso": -5.5,
-      "recortar_y_min": { "w294440203": -70.0 },
-      "omitir_areas": ["w1408462368", "w1408462369", "w1408462370"],
-      "banderas": [[-16.5, -58, "bandera"], [-16.5, -64, "bandera_amarilla"], [-16.5, -70, "bandera_verde"], [-16.5, -76, "bandera_roja"],
-                   [24.5, -58, "bandera"], [24.5, -64, "bandera_verde"], [24.5, -70, "bandera_amarilla"], [24.5, -76, "bandera_roja"]]
+      "hueco": [
+        -13.0,
+        21.5,
+        -101.0,
+        -70.0
+      ],
+      "y_cascada": [
+        -70.0,
+        -84.0
+      ],
+      "x_cascada": [
+        -2.2,
+        10.0
+      ],
+      "escaleras_x": [
+        [
+          -4.3,
+          -2.2
+        ],
+        [
+          10.0,
+          13.2
+        ]
+      ],
+      "terrazas_x": [
+        [
+          -13.0,
+          -4.3
+        ],
+        [
+          13.2,
+          21.5
+        ]
+      ],
+      "puente_y": [
+        -84.0,
+        -87.5
+      ],
+      "foso_y": [
+        -87.5,
+        -99.0
+      ],
+      "estanque": [
+        -1.7,
+        9.6,
+        -96.4,
+        -87.5
+      ],
+      "nivel_puente": -3.0,
+      "nivel_foso": -5.5,
+      "recortar_y_min": {
+        "w294440203": -70.0
+      },
+      "omitir_areas": [
+        "w1408462368",
+        "w1408462369",
+        "w1408462370"
+      ],
+      "banderas": [
+        [
+          -16.5,
+          -58,
+          "bandera"
+        ],
+        [
+          -16.5,
+          -64,
+          "bandera_amarilla"
+        ],
+        [
+          -16.5,
+          -70,
+          "bandera_verde"
+        ],
+        [
+          -16.5,
+          -76,
+          "bandera_roja"
+        ],
+        [
+          24.5,
+          -58,
+          "bandera"
+        ],
+        [
+          24.5,
+          -64,
+          "bandera_verde"
+        ],
+        [
+          24.5,
+          -70,
+          "bandera_amarilla"
+        ],
+        [
+          24.5,
+          -76,
+          "bandera_roja"
+        ]
+      ]
     },
     "hitos": {
-      "w145150841": { "nombre": "Hotel Caracas Palace (antiguo Four Seasons)", "modelo": "torre_escalonada",
-                      "material": "M_Franjas_Azul",
-                      "escalones": [[1.0, 1.0, 0.0, 14, 14], [0.9, 0.5, 0.45, 62, 22], [0.55, 0.55, -0.35, 118, 12]],
-                      "nota": "Franjas horizontales de vidrio azul y antepecho blanco; ala curva con terrazas sembradas hacia la plaza" },
-      "w153848559": { "nombre": "Torre Delta", "modelo": "torre_escalonada", "altura": 62,
-                      "material": "M_Franjas_Blanca", "aletas": { "piso": 3.3, "vuelo": 0.7 },
-                      "escalones": [[1.0, 1.0, 0.0, 24, 2], [0.92, 0.9, 0.0, 48, 2], [0.8, 0.78, 0.0, 62, 2]],
-                      "nota": "Torre blanca de losas voladas en cada piso (la altura de OSM era estimada)" },
-      "w153852797": { "nombre": "Torre Británica", "modelo": "torre_marco",
-                      "letrero": { "texto": "BRITANICA", "material": "M_Letrero_Rojo", "alto": 3.6 },
-                      "nota": "Vidrio oscuro dentro de un marco de concreto claro con ranura en el remate" },
-      "w242133429": { "nombre": "Torre Adriática", "modelo": "torre_arcos",
-                      "letrero": { "texto": "adriática de seguros", "material": "M_Letrero_Azul", "alto": 0.9 },
-                      "nota": "Cuerpo beige de ventanas verticales y corona hueca de arcos" },
-      "w153852793": { "nombre": "Hotel Montserrat", "modelo": "normal",
-                      "letrero_techo": { "texto": "HOTEL MONTSERRAT", "material": "M_Letrero_Rojo", "alto": 2.2 } },
-      "w153848484": { "nombre": "Residencias Altamira", "modelo": "balcones",
-                      "nota": "Edificio gris detrás del obelisco con balcones corridos y antepechos blancos" }
+      "w145150841": {
+        "nombre": "Hotel Caracas Palace (antiguo Four Seasons)",
+        "modelo": "torre_escalonada",
+        "material": "M_Franjas_Azul",
+        "escalones": [
+          [
+            1.0,
+            1.0,
+            0.0,
+            14,
+            14
+          ],
+          [
+            0.9,
+            0.5,
+            0.45,
+            62,
+            22
+          ],
+          [
+            0.55,
+            0.55,
+            -0.35,
+            118,
+            12
+          ]
+        ],
+        "nota": "Franjas horizontales de vidrio azul y antepecho blanco; ala curva con terrazas sembradas hacia la plaza"
+      },
+      "w153848559": {
+        "nombre": "Torre Delta",
+        "modelo": "torre_escalonada",
+        "altura": 62,
+        "material": "M_Franjas_Blanca",
+        "aletas": {
+          "piso": 3.3,
+          "vuelo": 0.7
+        },
+        "escalones": [
+          [
+            1.0,
+            1.0,
+            0.0,
+            24,
+            2
+          ],
+          [
+            0.92,
+            0.9,
+            0.0,
+            48,
+            2
+          ],
+          [
+            0.8,
+            0.78,
+            0.0,
+            62,
+            2
+          ]
+        ],
+        "nota": "Torre blanca de losas voladas en cada piso (la altura de OSM era estimada)"
+      },
+      "w153852797": {
+        "nombre": "Torre Británica",
+        "modelo": "torre_marco",
+        "letrero": {
+          "texto": "BRITANICA",
+          "material": "M_Letrero_Rojo",
+          "alto": 3.6
+        },
+        "nota": "Vidrio oscuro dentro de un marco de concreto claro con ranura en el remate"
+      },
+      "w242133429": {
+        "nombre": "Torre Adriática",
+        "modelo": "torre_arcos",
+        "letrero": {
+          "texto": "adriática de seguros",
+          "material": "M_Letrero_Azul",
+          "alto": 0.9
+        },
+        "nota": "Cuerpo beige de ventanas verticales y corona hueca de arcos"
+      },
+      "w153852793": {
+        "nombre": "Hotel Montserrat",
+        "modelo": "normal",
+        "letrero_techo": {
+          "texto": "HOTEL MONTSERRAT",
+          "material": "M_Letrero_Rojo",
+          "alto": 2.2
+        }
+      },
+      "w153848484": {
+        "nombre": "Residencias Altamira",
+        "modelo": "balcones",
+        "nota": "Edificio gris detrás del obelisco con balcones corridos y antepechos blancos"
+      }
     },
     "letreros_3d": [
-      { "partes": [["YO", "M_Letras"], ["♥", "M_Corazon", 1.45], ["CHACAO", "M_Letras"]],
-        "centro": [3.9, -69.85], "frente": [0, -1], "alto": 1.6, "grosor": 0.35, "sobre_borde_de": "w294440203",
-        "nota": "Letras corpóreas en lo alto de la cascada que baja al Metro (se leen desde Av. Francisco de Miranda)" }
+      {
+        "partes": [
+          [
+            "YO",
+            "M_Letras"
+          ],
+          [
+            "♥",
+            "M_Corazon",
+            1.45
+          ],
+          [
+            "CHACAO",
+            "M_Letras"
+          ]
+        ],
+        "centro": [
+          3.9,
+          -69.85
+        ],
+        "frente": [
+          0,
+          -1
+        ],
+        "alto": 1.6,
+        "grosor": 0.35,
+        "sobre_borde_de": "w294440203",
+        "nota": "Letras corpóreas en lo alto de la cascada que baja al Metro (se leen desde Av. Francisco de Miranda)"
+      }
     ],
     "camaras": {
-      "Cam_Plaza_Calle": { "pos": [14, -132, 1.65], "ojo": true, "mira": [0, 0, 24], "lente": 20 },
-      "Cam_Plaza_Fuente": { "pos": [32, -24, 1.65], "ojo": true, "mira": [0, 0, 18], "lente": 20 },
-      "Cam_Plaza_Dron": { "pos": [-170, -300, 110], "mira": [0, 20, 10], "lente": 26 },
-      "Cam_Avila": { "pos": [150, -1300, 260], "mira": [0, 4000, 1100], "lente": 24 },
-      "Cam_Yo_Chacao": { "pos": [3.9, -86.2, 1.7], "ojo": true, "mira": [1.5, 0, 16], "lente": 24 },
-      "Cam_Hacia_Britanica": { "pos": [5, -104, 1.7], "ojo": true, "mira": [20, -384, 28], "lente": 22 },
-      "Cam_Caracas_Palace": { "pos": [-15, 40, 1.7], "ojo": true, "mira": [80, -38, 45], "lente": 20 },
-      "Cam_Suroeste": { "pos": [30, -115, 1.7], "ojo": true, "mira": [-80, -150, 24], "lente": 20 },
-      "Cam_Metro": { "pos": [4.0, -103.5, 1.7], "ojo": true, "mira": [4.0, -40, -1.5], "mira_suelo": true, "lente": 18 },
-      "Cam_Plaza_Aerea": { "pos": [0, -140, 55], "mira": [0, 12, 0], "lente": 24 },
-      "Cam_Plaza_Edificio": { "pos": [-45, -75, 28], "mira": [0, 5, 8], "lente": 24 }
+      "Cam_Plaza_Calle": {
+        "pos": [
+          14,
+          -132,
+          1.65
+        ],
+        "ojo": true,
+        "mira": [
+          0,
+          0,
+          24
+        ],
+        "lente": 20
+      },
+      "Cam_Plaza_Fuente": {
+        "pos": [
+          32,
+          -24,
+          1.65
+        ],
+        "ojo": true,
+        "mira": [
+          0,
+          0,
+          18
+        ],
+        "lente": 20
+      },
+      "Cam_Plaza_Dron": {
+        "pos": [
+          -170,
+          -300,
+          110
+        ],
+        "mira": [
+          0,
+          20,
+          10
+        ],
+        "lente": 26
+      },
+      "Cam_Avila": {
+        "pos": [
+          150,
+          -1300,
+          260
+        ],
+        "mira": [
+          0,
+          4000,
+          1100
+        ],
+        "lente": 24
+      },
+      "Cam_Yo_Chacao": {
+        "pos": [
+          3.9,
+          -86.2,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          1.5,
+          0,
+          16
+        ],
+        "lente": 24
+      },
+      "Cam_Hacia_Britanica": {
+        "pos": [
+          5,
+          -104,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          20,
+          -384,
+          28
+        ],
+        "lente": 22
+      },
+      "Cam_Caracas_Palace": {
+        "pos": [
+          -15,
+          40,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          80,
+          -38,
+          45
+        ],
+        "lente": 20
+      },
+      "Cam_Suroeste": {
+        "pos": [
+          30,
+          -115,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          -80,
+          -150,
+          24
+        ],
+        "lente": 20
+      },
+      "Cam_Metro": {
+        "pos": [
+          4.0,
+          -103.5,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          4.0,
+          -40,
+          -1.5
+        ],
+        "mira_suelo": true,
+        "lente": 18
+      },
+      "Cam_Plaza_Aerea": {
+        "pos": [
+          0,
+          -140,
+          55
+        ],
+        "mira": [
+          0,
+          12,
+          0
+        ],
+        "lente": 24
+      },
+      "Cam_Plaza_Edificio": {
+        "pos": [
+          -45,
+          -75,
+          28
+        ],
+        "mira": [
+          0,
+          5,
+          8
+        ],
+        "lente": 24
+      }
     },
     "alturas_conocidas": {
-      "w1221023817": { "altura": 44.25, "nota": "Obelisco de Plaza Francia (otras fuentes: 47,25 m)" }
+      "w1221023817": {
+        "altura": 44.25,
+        "nota": "Obelisco de Plaza Francia (otras fuentes: 47,25 m)"
+      }
     }
   },
   "lacarlota": {
@@ -93,41 +467,583 @@
     "filtro_dsm_px": 5,
     "suavizado_terreno_m": 12,
     "ondulacion_geoide_m": null,
-    "inicio_jugador": { "x": 830.0, "y": -183.0 },
-    "fondo": { "radio_m": 14000, "resolucion_m": 50 },
-    "ciudad_lejana": { "radio_m": 7000, "area_min_m2": 60 },
-    "detalle": { "centro": [-700.0, 80.0], "radio_m": 300 },
-    "detalles_extra": [ { "centro": [-1080.0, -160.0], "radio_m": 200, "nota": "Chuao: UNEFA, Cubo Negro y CCCT" } ],
-    "hitos": {
-      "w382327814": { "nombre": "Sede UNEFA (Av. La Estancia, Chuao)", "modelo": "unefa", "altura": 64,
-                      "mira_hacia": [-1051, -120], "retiro_atras": 22,
-                      "letrero": { "texto": "UNEFA", "material": "M_Letras", "alto": 1.3 },
-                      "letrero_techo": { "texto": "UNEFA", "material": "M_Letrero_Rojo", "alto": 3.5 },
-                      "nota": "Torre-placa de quiebrasoles con pabellón de techo plegado al frente (fotos de Street View, jul 2022)" },
-      "w153815545": { "nombre": "Centro Banaven (Cubo Negro)", "modelo": "cubo_negro", "mira_hacia": [-1051, -160] },
-      "w718186161": { "nombre": "Pirámide Invertida (CCCT)", "modelo": "piramide_invertida", "altura": 30 },
-      "w153825237": { "nombre": "CCCT (centro comercial)", "material": "M_Mural_CCCT", "altura": 20 },
-      "w718186160": { "nombre": "Torre A (CCCT)", "material": "M_Franjas_Gris" },
-      "w718186159": { "nombre": "Torre B (CCCT)", "material": "M_Franjas_Gris" },
-      "w718186158": { "nombre": "Torre C (CCCT)", "material": "M_Franjas_Gris" },
-      "w153825214": { "nombre": "Torre IBM", "material": "M_Franjas_Gris" },
-      "w153815542": { "nombre": "Torre Las Mercedes", "material": "M_Franjas_Gris" }
+    "inicio_jugador": {
+      "x": 830.0,
+      "y": -183.0
     },
-    "pasto": { "color": "verde", "rayas_angulo": -12.4, "nota": "La grama de la base se mantiene verde todo el año; franjas paralelas a la pista 11/29" },
-    "render": { "fecha": "2026-03-15", "hora": "11:30", "muestras": 96, "porcentaje": 70, "exposicion": -1.5 },
+    "fondo": {
+      "radio_m": 14000,
+      "resolucion_m": 50
+    },
+    "ciudad_lejana": {
+      "radio_m": 7000,
+      "area_min_m2": 60
+    },
+    "detalle": {
+      "centro": [
+        -700.0,
+        80.0
+      ],
+      "radio_m": 300
+    },
+    "detalles_extra": [
+      {
+        "centro": [
+          -1080.0,
+          -160.0
+        ],
+        "radio_m": 200,
+        "nota": "Chuao: UNEFA, Cubo Negro y CCCT"
+      }
+    ],
+    "barrios": [
+      {
+        "nombre": "Chuao (frente sur de La Carlota)",
+        "calles": [
+          "Avenida Río de Janeiro",
+          "Avenida Araure",
+          "Calle Choroní",
+          "Calle Roraima",
+          "Calle Santa Fe",
+          "Calle Las Lomas",
+          "Calle La Glorieta",
+          "Avenida La Guairita",
+          "Calle La Guairita"
+        ],
+        "distancia_m": 70,
+        "fachadas": {
+          "residencial": [
+            [
+              "M_Fachada_Ladrillo",
+              0.35
+            ],
+            [
+              "M_Fachada_Friso",
+              0.45
+            ],
+            [
+              "M_Fachada_Beige",
+              0.2
+            ]
+          ],
+          "comercial": [
+            [
+              "M_Fachada_Comercial",
+              0.5
+            ],
+            [
+              "M_Fachada_Friso",
+              0.5
+            ]
+          ],
+          "oficina": [
+            [
+              "M_Fachada_Concreto",
+              0.4
+            ],
+            [
+              "M_Fachada_Friso",
+              0.6
+            ]
+          ]
+        },
+        "colores": {
+          "blanco": 0.3,
+          "crema": 0.25,
+          "salmon": 0.15,
+          "durazno": 0.12,
+          "turquesa": 0.1,
+          "azul": 0.08
+        },
+        "balcones": 0.75,
+        "muros": 0.7,
+        "detalle": true,
+        "nota": "Observado en Street View (Av. Araure y Av. Río de Janeiro, 2024): torres residenciales de 8-15 pisos de los años 60-70, de ladrillo rojo con losas blancas o friso blanco/crema/salmón con paneles turquesa, balcones corridos, y muros de parcela pintados con portón metálico y grafitis"
+      }
+    ],
+    "hitos": {
+      "w382327814": {
+        "nombre": "Sede UNEFA (Av. La Estancia, Chuao)",
+        "modelo": "unefa",
+        "altura": 64,
+        "mira_hacia": [
+          -1051,
+          -120
+        ],
+        "retiro_atras": 22,
+        "letrero": {
+          "texto": "UNEFA",
+          "material": "M_Letras",
+          "alto": 1.3
+        },
+        "letrero_techo": {
+          "texto": "UNEFA",
+          "material": "M_Letrero_Rojo",
+          "alto": 3.5
+        },
+        "nota": "Torre-placa de quiebrasoles con pabellón de techo plegado al frente (fotos de Street View, jul 2022)"
+      },
+      "w153815545": {
+        "nombre": "Centro Banaven (Cubo Negro)",
+        "modelo": "cubo_negro",
+        "mira_hacia": [
+          -1051,
+          -160
+        ]
+      },
+      "w718186161": {
+        "nombre": "Pirámide Invertida (CCCT)",
+        "modelo": "piramide_invertida",
+        "altura": 30
+      },
+      "w153825237": {
+        "nombre": "CCCT (centro comercial)",
+        "material": "M_Mural_CCCT",
+        "altura": 20
+      },
+      "w718186160": {
+        "nombre": "Torre A (CCCT)",
+        "material": "M_Franjas_Gris"
+      },
+      "w718186159": {
+        "nombre": "Torre B (CCCT)",
+        "material": "M_Franjas_Gris"
+      },
+      "w718186158": {
+        "nombre": "Torre C (CCCT)",
+        "material": "M_Franjas_Gris"
+      },
+      "w153825214": {
+        "nombre": "Torre IBM",
+        "material": "M_Franjas_Gris"
+      },
+      "w153815542": {
+        "nombre": "Torre Las Mercedes",
+        "material": "M_Franjas_Gris"
+      }
+    },
+    "pasto": {
+      "color": "verde",
+      "rayas_angulo": -12.4,
+      "nota": "La grama de la base se mantiene verde todo el año; franjas paralelas a la pista 11/29"
+    },
+    "render": {
+      "fecha": "2026-03-15",
+      "hora": "11:30",
+      "muestras": 96,
+      "porcentaje": 70,
+      "exposicion": -1.5
+    },
     "camaras": {
-      "Cam_Cabecera_29": { "pos": [956, -211, 3.5], "ojo": true, "mira": [-499, 109, 3], "lente": 35 },
-      "Cam_Aproximacion_11": { "pos": [-1831, 402, 130], "mira": [-659, 145, 0], "lente": 35 },
-      "Cam_Dron_Base": { "pos": [-900, -1500, 380], "mira": [0, 200, 0], "lente": 24 },
-      "Cam_Plataforma": { "pos": [-709, 34, 1.7], "ojo": true, "mira": [0, -100, 5], "lente": 22 },
-      "Cam_Aeronaves": { "pos": [770, -165, 1.7], "ojo": true, "mira": [870, -95, 2], "lente": 26 },
-      "Cam_Torre": { "pos": [-640, -60, 12], "mira": [-693, 7, 14], "lente": 24 },
-      "Cam_UNEFA_Calle": { "pos": [-1051, -152, 1.7], "ojo": true, "mira": [-1051, -215, 24], "mira_suelo": true, "lente": 18 },
-      "Cam_UNEFA_Pasarela": { "pos": [-1040, -150, 1.7], "ojo": true, "mira": [-1115, -152, 5], "mira_suelo": true, "lente": 20 },
-      "Cam_Cubo_Negro": { "pos": [-1062, -142, 1.7], "ojo": true, "mira": [-1057, -80, 16], "mira_suelo": true, "lente": 18 },
-      "Cam_UNEFA_Azotea": { "pos": [-995, -216.5, 1.7], "azotea": true, "mira": [-450, 150, 10], "mira_suelo": true, "lente": 20 },
-      "Cam_UNEFA_Azotea_Norte": { "pos": [-1040, -216.5, 1.7], "azotea": true, "mira": [-1150, 600, 120], "mira_suelo": true, "lente": 20 },
-      "Cam_Cerca": { "pos": [-128.2, 379.1, 1.7], "ojo": true, "mira": [-159.0, 374.9, 1.6], "mira_suelo": true, "lente": 28 }
+      "Cam_Cabecera_29": {
+        "pos": [
+          956,
+          -211,
+          3.5
+        ],
+        "ojo": true,
+        "mira": [
+          -499,
+          109,
+          3
+        ],
+        "lente": 35
+      },
+      "Cam_Aproximacion_11": {
+        "pos": [
+          -1831,
+          402,
+          130
+        ],
+        "mira": [
+          -659,
+          145,
+          0
+        ],
+        "lente": 35
+      },
+      "Cam_Dron_Base": {
+        "pos": [
+          -900,
+          -1500,
+          380
+        ],
+        "mira": [
+          0,
+          200,
+          0
+        ],
+        "lente": 24
+      },
+      "Cam_Plataforma": {
+        "pos": [
+          -709,
+          34,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          0,
+          -100,
+          5
+        ],
+        "lente": 22
+      },
+      "Cam_Aeronaves": {
+        "pos": [
+          770,
+          -165,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          870,
+          -95,
+          2
+        ],
+        "lente": 26
+      },
+      "Cam_Torre": {
+        "pos": [
+          -640,
+          -60,
+          12
+        ],
+        "mira": [
+          -693,
+          7,
+          14
+        ],
+        "lente": 24
+      },
+      "Cam_Chuao_RioJaneiro": {
+        "pos": [
+          -103.8,
+          -132.7,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          200,
+          -320,
+          14
+        ],
+        "mira_suelo": true,
+        "lente": 20
+      },
+      "Cam_Chuao_Araure": {
+        "pos": [
+          -380.1,
+          -233.6,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          10,
+          -328,
+          12
+        ],
+        "mira_suelo": true,
+        "lente": 20
+      },
+      "Cam_Chuao_desde_Base": {
+        "pos": [
+          -150,
+          -40,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          0,
+          -300,
+          18
+        ],
+        "mira_suelo": true,
+        "lente": 24
+      },
+      "Cam_UNEFA_Calle": {
+        "pos": [
+          -1051,
+          -152,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          -1051,
+          -215,
+          24
+        ],
+        "mira_suelo": true,
+        "lente": 18
+      },
+      "Cam_UNEFA_Pasarela": {
+        "pos": [
+          -1040,
+          -150,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          -1115,
+          -152,
+          5
+        ],
+        "mira_suelo": true,
+        "lente": 20
+      },
+      "Cam_Cubo_Negro": {
+        "pos": [
+          -990,
+          -145,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          -1052,
+          -88,
+          20
+        ],
+        "mira_suelo": true,
+        "lente": 20
+      },
+      "Cam_CCCT": {
+        "pos": [
+          -1160,
+          -150,
+          40
+        ],
+        "mira": [
+          -1300,
+          -10,
+          8
+        ],
+        "mira_suelo": true,
+        "lente": 24
+      },
+      "Cam_UNEFA_Azotea": {
+        "pos": [
+          -995,
+          -216.5,
+          1.7
+        ],
+        "azotea": true,
+        "mira": [
+          -450,
+          150,
+          10
+        ],
+        "mira_suelo": true,
+        "lente": 20
+      },
+      "Cam_UNEFA_Azotea_Norte": {
+        "pos": [
+          -1040,
+          -216.5,
+          1.7
+        ],
+        "azotea": true,
+        "mira": [
+          -1150,
+          600,
+          120
+        ],
+        "mira_suelo": true,
+        "lente": 20
+      },
+      "Cam_Cerca": {
+        "pos": [
+          -128.2,
+          379.1,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          -159.0,
+          374.9,
+          1.6
+        ],
+        "mira_suelo": true,
+        "lente": 28
+      }
     }
+  },
+  "libertador": {
+    "nombre": "Base Aérea El Libertador (Palo Negro, Aragua)",
+    "ciudad": "maracay",
+    "centro": {
+      "lat": 10.18374,
+      "lon": -67.55222,
+      "nota": "Centro del polígono de la Base Aérea El Libertador (SVBL), OSM way 418817779"
+    },
+    "tamano_m": 6048,
+    "resolucion_terreno_m": 2.0,
+    "celda_m": 252,
+    "margen_dem_m": 600,
+    "filtro_dsm_px": 5,
+    "suavizado_terreno_m": 12,
+    "ondulacion_geoide_m": null,
+    "inicio_jugador": {
+      "x": -1000.0,
+      "y": -650.0
+    },
+    "fondo": {
+      "radio_m": 16000,
+      "resolucion_m": 50
+    },
+    "ciudad_lejana": {
+      "radio_m": 7000,
+      "area_min_m2": 60
+    },
+    "detalle": {
+      "centro": [
+        -1000.0,
+        -860.0
+      ],
+      "radio_m": 550
+    },
+    "pasto": {
+      "color": "seco",
+      "rayas_angulo": 8.2,
+      "nota": "En las imágenes de temporada seca la grama de la base se ve pardo-amarilla; cambiar a 'verde' para la temporada de lluvias. Franjas paralelas a la pista 10/28"
+    },
+    "render": {
+      "fecha": "2026-03-15",
+      "hora": "09:30",
+      "muestras": 96,
+      "porcentaje": 100,
+      "exposicion": -0.9
+    },
+    "camaras": {
+      "Cam_Base_Aerea": {
+        "pos": [
+          -2600,
+          -3000,
+          650
+        ],
+        "mira": [
+          -500,
+          -300,
+          0
+        ],
+        "lente": 24
+      },
+      "Cam_Plataforma": {
+        "pos": [
+          -1750,
+          -640,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          -300,
+          -760,
+          5
+        ],
+        "mira_suelo": true,
+        "lente": 22
+      },
+      "Cam_Hangares": {
+        "pos": [
+          -700,
+          -600,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          -700,
+          -920,
+          6
+        ],
+        "mira_suelo": true,
+        "lente": 20
+      },
+      "Cam_Cabecera_10": {
+        "pos": [
+          -2440,
+          -326,
+          3.5
+        ],
+        "ojo": true,
+        "mira": [
+          1330,
+          214,
+          3
+        ],
+        "mira_suelo": true,
+        "lente": 35
+      },
+      "Cam_Aproximacion_28": {
+        "pos": [
+          3100,
+          470,
+          140
+        ],
+        "mira": [
+          800,
+          140,
+          0
+        ],
+        "mira_suelo": true,
+        "lente": 35
+      },
+      "Cam_Dron_Hangares": {
+        "pos": [
+          -900,
+          -2000,
+          260
+        ],
+        "mira": [
+          -900,
+          -800,
+          0
+        ],
+        "mira_suelo": true,
+        "lente": 24
+      },
+      "Cam_Torre_BAEL": {
+        "pos": [
+          -1109.9,
+          -782.4,
+          1.7
+        ],
+        "ojo": true,
+        "mira": [
+          -1102.0817901527378,
+          -836.8589685303559,
+          9
+        ],
+        "mira_suelo": true,
+        "lente": 24
+      }
+    },
+    "edificios_extra": [
+      {
+        "nombre": "Torre de control BAEL",
+        "modelo": "torre_ajedrez",
+        "centro": [
+          -1110.0,
+          -838.0
+        ],
+        "frente_grados": 98.2,
+        "lado": 6.0,
+        "alto_fuste": 15.0,
+        "despejar_m": 30,
+        "nota": "Damero rojo y blanco, cabina oscura y escalera roja (foto del usuario, reel de @bael_amb). Ubicación aproximada: junto al borde sur de la plataforma"
+      },
+      {
+        "nombre": "Edificio de operaciones BAEL",
+        "modelo": "edificio_bael",
+        "centro": [
+          -1090.8,
+          -837.8
+        ],
+        "frente_grados": 98.2,
+        "largo": 26.0,
+        "fondo": 11.0,
+        "alto": 4.6,
+        "letras": "BAEL",
+        "despejar_m": 25
+      }
+    ]
   }
 }
