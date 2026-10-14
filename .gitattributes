@@ -15,3 +15,6 @@ datos/**/*.csv filter=lfs diff=lfs merge=lfs -text
 *.py text eol=lf
 *.md text eol=lf
 *.ps1 text eol=crlf
+godot/zonas/**/*.bin filter=lfs diff=lfs merge=lfs -text
+godot/zonas/**/*.json filter=lfs diff=lfs merge=lfs -text
+godot/texturas/*.jpg filter=lfs diff=lfs merge=lfs -text

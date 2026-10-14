@@ -1,0 +1,38 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://0iy7kg6je173"
+path.s3tc="res://.godot/imported/biblioteca_Image_5.png-d15678a407813c0f2420935904e7ac69.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+generator_parameters={
+"md5": "ce7c981c0811d1ad99d96981332c6c4b"
+}
+
+[deps]
+
+source_file="res://zonas/lacarlota/biblioteca_Image_5.png"
+dest_files=["res://.godot/imported/biblioteca_Image_5.png-d15678a407813c0f2420935904e7ac69.s3tc.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=1

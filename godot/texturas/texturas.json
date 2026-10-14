@@ -1,0 +1,266 @@
+{
+ "M_Asfalto": {
+  "id": "asphalt_02",
+  "tamano_m": [
+   3.0,
+   3.0
+  ],
+  "mapas": {
+   "color": "res://texturas/asphalt_02_color.jpg",
+   "normal": "res://texturas/asphalt_02_normal.jpg",
+   "rugosidad": "res://texturas/asphalt_02_rugosidad.jpg"
+  }
+ },
+ "M_Acera": {
+  "id": "concrete_floor_worn_001",
+  "tamano_m": [
+   3.0,
+   3.0
+  ],
+  "mapas": {
+   "color": "res://texturas/concrete_floor_worn_001_color.jpg",
+   "normal": "res://texturas/concrete_floor_worn_001_normal.jpg",
+   "rugosidad": "res://texturas/concrete_floor_worn_001_rugosidad.jpg"
+  }
+ },
+ "M_Brocal": {
+  "id": "rough_concrete",
+  "tamano_m": [
+   1.23,
+   1.23
+  ],
+  "mapas": {
+   "color": "res://texturas/rough_concrete_color.jpg",
+   "normal": "res://texturas/rough_concrete_normal.jpg",
+   "rugosidad": "res://texturas/rough_concrete_rugosidad.jpg"
+  }
+ },
+ "M_Sendero": {
+  "id": "concrete_pavement_02",
+  "tamano_m": [
+   1.8,
+   1.8
+  ],
+  "mapas": {
+   "color": "res://texturas/concrete_pavement_02_color.jpg",
+   "normal": "res://texturas/concrete_pavement_02_normal.jpg",
+   "rugosidad": "res://texturas/concrete_pavement_02_rugosidad.jpg"
+  }
+ },
+ "M_Plaza": {
+  "id": "concrete_tiles_02",
+  "tamano_m": [
+   1.825,
+   1.825
+  ],
+  "mapas": {
+   "color": "res://texturas/concrete_tiles_02_color.jpg",
+   "normal": "res://texturas/concrete_tiles_02_normal.jpg",
+   "rugosidad": "res://texturas/concrete_tiles_02_rugosidad.jpg"
+  }
+ },
+ "M_Grama": {
+  "id": "leafy_grass",
+  "tamano_m": [
+   2.0,
+   2.0
+  ],
+  "mapas": {
+   "color": "res://texturas/leafy_grass_color.jpg",
+   "normal": "res://texturas/leafy_grass_normal.jpg",
+   "rugosidad": "res://texturas/leafy_grass_rugosidad.jpg"
+  }
+ },
+ "M_Cancha": {
+  "id": "concrete_floor_painted",
+  "tamano_m": [
+   2.0,
+   2.0
+  ],
+  "mapas": {
+   "color": "res://texturas/concrete_floor_painted_color.jpg",
+   "normal": "res://texturas/concrete_floor_painted_normal.jpg",
+   "rugosidad": "res://texturas/concrete_floor_painted_rugosidad.jpg"
+  }
+ },
+ "M_Terreno": {
+  "id": "red_laterite_soil_stones",
+  "tamano_m": [
+   2.0,
+   2.0
+  ],
+  "mapas": {
+   "color": "res://texturas/red_laterite_soil_stones_color.jpg",
+   "normal": "res://texturas/red_laterite_soil_stones_normal.jpg",
+   "rugosidad": "res://texturas/red_laterite_soil_stones_rugosidad.jpg"
+  }
+ },
+ "M_Techo": {
+  "id": "bitumen",
+  "tamano_m": [
+   20.0,
+   20.0
+  ],
+  "mapas": {
+   "color": "res://texturas/bitumen_color.jpg",
+   "normal": "res://texturas/bitumen_normal.jpg",
+   "rugosidad": "res://texturas/bitumen_rugosidad.jpg"
+  }
+ },
+ "M_Techo_Concreto": {
+  "id": "concrete_floor_02",
+  "tamano_m": [
+   2.0,
+   2.0
+  ],
+  "mapas": {
+   "color": "res://texturas/concrete_floor_02_color.jpg",
+   "normal": "res://texturas/concrete_floor_02_normal.jpg",
+   "rugosidad": "res://texturas/concrete_floor_02_rugosidad.jpg"
+  }
+ },
+ "M_Fachada_Friso": {
+  "id": "painted_plaster_wall",
+  "tamano_m": [
+   2.0,
+   2.0
+  ],
+  "mapas": {
+   "color": "res://texturas/painted_plaster_wall_color.jpg",
+   "normal": "res://texturas/painted_plaster_wall_normal.jpg",
+   "rugosidad": "res://texturas/painted_plaster_wall_rugosidad.jpg"
+  }
+ },
+ "M_Fachada_Casa": {
+  "id": "white_plaster_02",
+  "tamano_m": [
+   1.0,
+   1.0
+  ],
+  "mapas": {
+   "color": "res://texturas/white_plaster_02_color.jpg",
+   "normal": "res://texturas/white_plaster_02_normal.jpg",
+   "rugosidad": "res://texturas/white_plaster_02_rugosidad.jpg"
+  }
+ },
+ "M_Fachada_Beige": {
+  "id": "beige_wall_001",
+  "tamano_m": [
+   3.0,
+   3.0
+  ],
+  "mapas": {
+   "color": "res://texturas/beige_wall_001_color.jpg",
+   "normal": "res://texturas/beige_wall_001_normal.jpg",
+   "rugosidad": "res://texturas/beige_wall_001_rugosidad.jpg"
+  }
+ },
+ "M_Fachada_Comercial": {
+  "id": "grey_plaster",
+  "tamano_m": [
+   1.0,
+   1.0
+  ],
+  "mapas": {
+   "color": "res://texturas/grey_plaster_color.jpg",
+   "normal": "res://texturas/grey_plaster_normal.jpg",
+   "rugosidad": "res://texturas/grey_plaster_rugosidad.jpg"
+  }
+ },
+ "M_Fachada_Ladrillo": {
+  "id": "red_brick_03",
+  "tamano_m": [
+   1.0,
+   1.0
+  ],
+  "mapas": {
+   "color": "res://texturas/red_brick_03_color.jpg",
+   "normal": "res://texturas/red_brick_03_normal.jpg",
+   "rugosidad": "res://texturas/red_brick_03_rugosidad.jpg"
+  }
+ },
+ "M_Fachada_Ceramica": {
+  "id": "rectangular_facade_tiles",
+  "tamano_m": [
+   2.0,
+   2.0
+  ],
+  "mapas": {
+   "color": "res://texturas/rectangular_facade_tiles_color.jpg",
+   "normal": "res://texturas/rectangular_facade_tiles_normal.jpg",
+   "rugosidad": "res://texturas/rectangular_facade_tiles_rugosidad.jpg"
+  }
+ },
+ "M_Fachada_Concreto": {
+  "id": "concrete_wall_008",
+  "tamano_m": [
+   2.71,
+   2.71
+  ],
+  "mapas": {
+   "color": "res://texturas/concrete_wall_008_color.jpg",
+   "normal": "res://texturas/concrete_wall_008_normal.jpg",
+   "rugosidad": "res://texturas/concrete_wall_008_rugosidad.jpg"
+  }
+ },
+ "M_Monumento": {
+  "id": "white_rough_plaster",
+  "tamano_m": [
+   1.0,
+   1.0
+  ],
+  "mapas": {
+   "color": "res://texturas/white_rough_plaster_color.jpg",
+   "normal": "res://texturas/white_rough_plaster_normal.jpg",
+   "rugosidad": "res://texturas/white_rough_plaster_rugosidad.jpg"
+  }
+ },
+ "M_Santamaria": {
+  "id": "painted_metal_shutter",
+  "tamano_m": [
+   2.0,
+   2.0
+  ],
+  "mapas": {
+   "color": "res://texturas/painted_metal_shutter_color.jpg",
+   "normal": "res://texturas/painted_metal_shutter_normal.jpg",
+   "rugosidad": "res://texturas/painted_metal_shutter_rugosidad.jpg"
+  }
+ },
+ "M_Corteza_Palma": {
+  "id": "palm_bark",
+  "tamano_m": [
+   1.86,
+   1.86
+  ],
+  "mapas": {
+   "color": "res://texturas/palm_bark_color.jpg",
+   "normal": "res://texturas/palm_bark_normal.jpg",
+   "rugosidad": "res://texturas/palm_bark_rugosidad.jpg"
+  }
+ },
+ "M_Corteza": {
+  "id": "bark_brown_02",
+  "tamano_m": [
+   1.0,
+   1.0
+  ],
+  "mapas": {
+   "color": "res://texturas/bark_brown_02_color.jpg",
+   "normal": "res://texturas/bark_brown_02_normal.jpg",
+   "rugosidad": "res://texturas/bark_brown_02_rugosidad.jpg"
+  }
+ },
+ "M_Zinc": {
+  "id": "corrugated_iron",
+  "tamano_m": [
+   1.12,
+   1.12
+  ],
+  "mapas": {
+   "color": "res://texturas/corrugated_iron_color.jpg",
+   "normal": "res://texturas/corrugated_iron_normal.jpg",
+   "rugosidad": "res://texturas/corrugated_iron_rugosidad.jpg"
+  }
+ }
+}

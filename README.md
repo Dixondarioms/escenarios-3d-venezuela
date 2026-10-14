@@ -47,7 +47,8 @@ El **proyecto de Unreal** va fuera de OneDrive, en `C:\UE\CaracasSim`.
 3. [Hoja de ruta hacia el realismo](docs/03_realismo.md)
 4. [Realismo en Blender (escena de render)](docs/04_realismo_blender.md)
 5. [Modelos realistas de aeronaves y carros (descargados por ti)](docs/05_modelos_realistas.md)
-5. [Licencias y atribuciones](docs/licencias.md)
+6. [Usar los escenarios en Godot 4.4](docs/06_godot.md) (proyecto listo en `godot/`)
+7. [Licencias y atribuciones](docs/licencias.md)
 
 ## Usarlo desde otro proyecto
 
