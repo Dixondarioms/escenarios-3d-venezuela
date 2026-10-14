@@ -59,6 +59,88 @@ FACHADAS = {
 }
 
 
+# Colores de friso (mismo orden que PALETA en 03b_realismo.py): el color de vértice R elige uno.
+PALETA_NOMBRES = ["arena", "blanco", "salmon", "amarillo", "terracota", "gris", "azul", "verde", "crema",
+                  "durazno", "turquesa"]
+
+
+def r_de_color(nombre):
+    """Valor del canal R del color de vértice que selecciona ese color de la paleta."""
+    i = PALETA_NOMBRES.index(nombre)
+    return (i + 0.5) / len(PALETA_NOMBRES)
+
+
+def balcones_corridos(m, anillo, z0, techo, piso, rnd, vuelo=1.2, largo_min=7.0):
+    """Balcones corridos en las fachadas largas: losa volada en cada piso + antepecho (macizo blanco o
+    baranda de barrotes), como los edificios residenciales de los años 60-70 en Chuao y Altamira."""
+    mat_ante = "M_Losa_Blanca" if rnd.random() < 0.6 else "M_Baranda"
+    n = len(anillo)
+    for i in range(n):
+        a, b = anillo[i], anillo[(i + 1) % n]
+        L = math.dist(a, b)
+        if L < largo_min:
+            continue
+        p = Pared(a, b)
+        u0, u1 = 0.6, L - 0.6
+        z = z0
+        while z < techo - 1.2:
+            # losa (cara superior, inferior y canto) por fuera de la pared (p negativo = afuera)
+            q = [p.punto(u0, z, 0), p.punto(u1, z, 0), p.punto(u1, z, -vuelo), p.punto(u0, z, -vuelo)]
+            m.cara(q[::-1], [(0, 0), (1, 0), (1, 1), (0, 1)], "M_Losa_Blanca")
+            m.cara([(x, y, zz - 0.18) for x, y, zz in q], [(0, 0), (1, 0), (1, 1), (0, 1)], "M_Losa_Blanca")
+            p.quad(m, u0, u1, z - 0.18, z, -vuelo, "M_Losa_Blanca", 0, z, (1, 1, 1, 1), uv01=False)
+            # antepecho al borde de la losa y en los dos extremos
+            alto = 1.05
+            p.quad(m, u0, u1, z, z + alto, -vuelo, mat_ante, 0, z, (1, 1, 1, 1))
+            for uu, sgn in ((u0, 1), (u1, -1)):
+                e0, e1 = p.punto(uu, z, 0), p.punto(uu, z, -vuelo)
+                cara = [e0, e1, (e1[0], e1[1], z + alto), (e0[0], e0[1], z + alto)]
+                m.cara(cara if sgn < 0 else cara[::-1], [(0, 0), (vuelo, 0), (vuelo, alto), (0, alto)], mat_ante)
+            z += piso
+
+
+def muro_parcela(m, anillo, zs_de, cerca_de_calle, rnd, separacion=4.5, alto=2.3):
+    """Muro perimetral de la parcela (bloque o concreto pintado, con grafitis) en los lados que dan a la
+    calle, con un portón corredizo metálico. cerca_de_calle(x, y) -> True si el punto está junto a una calle
+    (entre la acera y la fachada). zs_de(x, y) -> z del terreno."""
+    afuera = offset_anillo(anillo, -separacion)
+    if area_firmada(afuera) * area_firmada(anillo) <= 0:
+        return 0
+    n = len(afuera)
+    tramos = []
+    for i in range(n):
+        a, b = afuera[i], afuera[(i + 1) % n]
+        if math.dist(a, b) < 3.0:
+            continue
+        mid = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
+        if cerca_de_calle(*mid):
+            tramos.append((a, b))
+    for k, (a, b) in enumerate(tramos):
+        L = math.dist(a, b)
+        d = ((b[0] - a[0]) / L, (b[1] - a[1]) / L)
+        nrm = (-d[1], d[0])
+        puertas = []
+        if k == 0 and L > 9:  # un portón en el primer tramo
+            c0 = rnd.uniform(2.0, L - 6.5)
+            puertas.append((c0, c0 + 4.5))
+        cortes = [0.0] + [x for p in puertas for x in p] + [L]
+        for j in range(0, len(cortes) - 1, 2):
+            s0, s1 = cortes[j], cortes[j + 1]
+            if s1 - s0 < 0.3:
+                continue
+            pts = [(a[0] + d[0] * s, a[1] + d[1] * s) for s in (s0, s1)]
+            extruir_polilinea(m, pts, [nrm, nrm], [zs_de(*q) for q in pts], 0.2, alto, "M_Muro_Cerca")
+        for s0, s1 in puertas:  # portón de lámina metálica
+            q0 = (a[0] + d[0] * s0, a[1] + d[1] * s0)
+            q1 = (a[0] + d[0] * s1, a[1] + d[1] * s1)
+            z0 = zs_de(*q0)
+            m.cara([(*q0, z0), (*q1, z0), (*q1, z0 + alto - 0.1), (*q0, z0 + alto - 0.1)],
+                   [(0, 0), (1, 0), (1, 1), (0, 1)], "M_Santamaria")
+            m.cara([(*q1, z0), (*q0, z0), (*q0, z0 + alto - 0.1), (*q1, z0 + alto - 0.1)],
+                   [(0, 0), (1, 0), (1, 1), (0, 1)], "M_Santamaria")
+    return len(tramos)
+
+
 def estilo_de(tipo):
     return ESTILO_POR_TIPO.get(tipo, "residencial")
 

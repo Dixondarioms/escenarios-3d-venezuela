@@ -2,7 +2,7 @@
 
 Uso:
     blender -b -P scripts/blender/03b_realismo.py -- altamira [--render] [--camara NOMBRE]
-            [--hora 08:30] [--fecha 2026-03-15] [--muestras 96] [--porcentaje 70]
+            [--hora 08:30] [--fecha 2026-03-15] [--muestras 96] [--porcentaje 70] [--luz tarde]
 
 Abre datos/<ciudad>/<zona>/<zona>.blend (del paso 03) y guarda <zona>_realista.blend con:
   * Materiales PBR con las texturas CC0 de Poly Haven (paso 00), tinte por edificio con la paleta
@@ -10,8 +10,8 @@ Abre datos/<ciudad>/<zona>/<zona>.blend (del paso 03) y guarda <zona>_realista.b
     líneas de carril y pasos de cebra pintados (todo con fórmulas sobre UV/colores de vértice,
     replicables en Unreal).
   * Relieve de fondo (El Ávila, el valle y la costa) con vegetación y ciudad procedurales.
-  * Cielo físico (Nishita) con el sol en la posición real para la fecha y hora en Caracas,
-    y bruma de valle en el compositor.
+  * Cielo físico (Nishita) con el sol en la posición real para la fecha y hora en Caracas, nubes
+    procedurales que se espesan sobre El Ávila, y bruma de valle en el compositor (ver cielo.py).
   * Mobiliario: farolas, semáforos, tanques, casillas, aires acondicionados, paradas, árboles
     (jacaranda de Poly Haven), papeleras, hidrantes y tapas, como instancias (poca memoria).
   * Cámaras de referencia en Plaza Francia.
@@ -36,13 +36,14 @@ from comun import RAIZ, cargar_zona, carpeta_zona  # noqa: E402
 _spec = importlib.util.spec_from_file_location("construir", AQUI / "03_construir_zona.py")
 construir = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(construir)
-
-TZ_CARACAS = -4.0
+sys.path.insert(0, str(AQUI))
+import cielo  # noqa: E402
 
 # Paleta de fachadas pintadas de Caracas (se elige una por edificio con el color de vértice R)
 PALETA = [(0.86, 0.79, 0.63), (0.93, 0.92, 0.89), (0.87, 0.64, 0.52), (0.91, 0.83, 0.57),
           (0.72, 0.45, 0.33), (0.77, 0.77, 0.75), (0.64, 0.74, 0.81), (0.72, 0.79, 0.64),
-          (0.95, 0.90, 0.80), (0.84, 0.72, 0.60)]
+          (0.95, 0.90, 0.80), (0.84, 0.72, 0.60), (0.42, 0.66, 0.66)]
+# (mismo orden que detalle.PALETA_NOMBRES: el color de vértice R elige la entrada)
 TINTE_ASFALTO = (0.42, 0.42, 0.44, 1)  # la textura es de asfalto claro/gastado; Caracas lo tiene más oscuro
 FACHADAS_PINTADAS = {"M_Fachada_Friso", "M_Fachada_Casa", "M_Fachada_Beige", "M_Fachada_Comercial", "M_Muro"}
 
@@ -998,6 +999,7 @@ def crear_materiales(tx, carpeta, zona):
     material_reja("M_Reja", 9.0, 2.0)
     material_reja("M_Cerca", 8.0, 0.55, uv_metros=True)
     material_barrotes()
+    material_barrotes("M_Baranda", 9.0, ((0.0, 0.05), (0.98, 1.05)))
     if tx.de("M_Zinc"):
         material_zinc(tx)
         material_hangar_pared(tx)
@@ -1711,52 +1713,6 @@ def props_extra(props, osm, terreno, zona_detalle, rnd):
 
 # ======================================================================= sol y cielo
 
-def posicion_solar(lat, lon, dia, hora_local, tz):
-    """Elevación y azimut (grados, azimut desde el Norte en sentido horario). Algoritmo NOAA."""
-    n = dia.timetuple().tm_yday
-    g = 2 * math.pi / 365 * (n - 1 + (hora_local - 12) / 24)
-    eqt = 229.18 * (0.000075 + 0.001868 * math.cos(g) - 0.032077 * math.sin(g)
-                    - 0.014615 * math.cos(2 * g) - 0.040849 * math.sin(2 * g))
-    decl = (0.006918 - 0.399912 * math.cos(g) + 0.070257 * math.sin(g) - 0.006758 * math.cos(2 * g)
-            + 0.000907 * math.sin(2 * g) - 0.002697 * math.cos(3 * g) + 0.00148 * math.sin(3 * g))
-    t_solar = hora_local * 60 + eqt + 4 * lon - 60 * tz
-    ha = math.radians(t_solar / 4 - 180)
-    phi = math.radians(lat)
-    cos_z = math.sin(phi) * math.sin(decl) + math.cos(phi) * math.cos(decl) * math.cos(ha)
-    zen = math.acos(max(-1, min(1, cos_z)))
-    az = math.degrees(math.atan2(math.sin(ha), math.cos(ha) * math.sin(phi) - math.tan(decl) * math.cos(phi))) + 180
-    return 90 - math.degrees(zen), az % 360
-
-
-def configurar_cielo(escena, zona, dia, hora, terreno_meta):
-    lat, lon = zona["centro"]["lat"], zona["centro"]["lon"]
-    h, mnt = (int(x) for x in hora.split(":"))
-    elev, az = posicion_solar(lat, lon, dia, h + mnt / 60, TZ_CARACAS)
-    print(f"  Sol {dia} {hora}: elevación {elev:.1f}°, azimut {az:.1f}°")
-    mundo = escena.world or bpy.data.worlds.new("Cielo")
-    escena.world = mundo
-    g = Nodos(mundo)
-    cielo = g.nuevo("ShaderNodeTexSky", sky_type="NISHITA")
-    cielo.sun_elevation = math.radians(max(elev, -5))
-    # Rotación de Nishita = azimut (desde el Norte = +Y local, sentido horario). Verificado con las sombras:
-    # a las 8:40 las caras al Este quedan iluminadas.
-    cielo.sun_rotation = math.radians(az) % (2 * math.pi)
-    cielo.altitude = terreno_meta["z_origen_msnm"]
-    cielo.air_density = 1.0
-    cielo.dust_density = 2.5  # bruma típica del valle
-    cielo.ozone_density = 1.0
-    cielo.sun_disc = True
-    fondo = g.nuevo("ShaderNodeBackground")
-    fondo.inputs["Strength"].default_value = 0.22
-    salida = g.nuevo("ShaderNodeOutputWorld")
-    g.unir(cielo.outputs["Color"], fondo.inputs["Color"])
-    g.unir(fondo.outputs["Background"], salida.inputs["Surface"])
-    mundo.mist_settings.start = 80
-    mundo.mist_settings.depth = 9000
-    mundo.mist_settings.falloff = "LINEAR"
-    return elev, az
-
-
 def configurar_bruma(escena, intensidad=0.32):
     """Perspectiva aérea: mezcla cada píxel con el color del cielo según la distancia."""
     capa = escena.view_layers[0]
@@ -1944,10 +1900,12 @@ def main():
         if o.name.startswith("Terreno_"):
             o.hide_render = False
 
-    elev, az = configurar_cielo(escena, zona, dia, hora, terreno.meta)
     configurar_render(escena, muestras, porcentaje)
-    escena.view_settings.exposure = float(cfg_render.get("exposicion", -0.8))  # mediodía: más luz, menos exposición
     configurar_bruma(escena)
+    # sol, cielo con nubes, exposición e intensidad de bruma (luz base de "render", o --luz NOMBRE)
+    zona.setdefault("render", {}).update({"fecha": dia.isoformat(), "hora": hora})
+    cielo.aplicar(escena, zona, argumento(argv, "--luz", None), terreno.meta["z_origen_msnm"])
+    escena["zona_id"] = zona["id"]
 
     # Cámaras de referencia
     cams = bpy.data.collections.new("Camaras")
@@ -1960,7 +1918,8 @@ def main():
         sobre el techo del edificio que haya en ese punto."""
         from mathutils import Vector
         hit, loc, _, _, obj, _ = escena.ray_cast(dg, Vector((x, y, 3000.0)), Vector((0, 0, -1)))
-        while hit and obj.name.startswith(("Edificios", "Fondo") if not en_azotea else ("Fondo",)):  # no pararse en techos
+        ignorar = ("Edificios", "Fondo", "Sombra_Nubes") if not en_azotea else ("Fondo", "Sombra_Nubes")
+        while hit and obj.name.startswith(ignorar):  # no pararse en techos ni en el plano de sombra de nubes
             hit, loc, _, _, obj, _ = escena.ray_cast(dg, loc - Vector((0, 0, 0.05)), Vector((0, 0, -1)))
         return (x, y, (loc.z if hit else z(x, y)) + alto)
 

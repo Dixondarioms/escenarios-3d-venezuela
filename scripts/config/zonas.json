@@ -98,6 +98,18 @@
     "ciudad_lejana": { "radio_m": 7000, "area_min_m2": 60 },
     "detalle": { "centro": [-700.0, 80.0], "radio_m": 300 },
     "detalles_extra": [ { "centro": [-1080.0, -160.0], "radio_m": 200, "nota": "Chuao: UNEFA, Cubo Negro y CCCT" } ],
+    "barrios": [
+      { "nombre": "Chuao (frente sur de La Carlota)",
+        "calles": ["Avenida Río de Janeiro", "Avenida Araure", "Calle Choroní", "Calle Roraima", "Calle Santa Fe",
+                   "Calle Las Lomas", "Calle La Glorieta", "Avenida La Guairita", "Calle La Guairita"],
+        "distancia_m": 70,
+        "fachadas": { "residencial": [["M_Fachada_Ladrillo", 0.35], ["M_Fachada_Friso", 0.45], ["M_Fachada_Beige", 0.2]],
+                      "comercial": [["M_Fachada_Comercial", 0.5], ["M_Fachada_Friso", 0.5]],
+                      "oficina": [["M_Fachada_Concreto", 0.4], ["M_Fachada_Friso", 0.6]] },
+        "colores": { "blanco": 0.3, "crema": 0.25, "salmon": 0.15, "durazno": 0.12, "turquesa": 0.1, "azul": 0.08 },
+        "balcones": 0.75, "muros": 0.7, "detalle": true,
+        "nota": "Observado en Street View (Av. Araure y Av. Río de Janeiro, 2024): torres residenciales de 8-15 pisos de los años 60-70, de ladrillo rojo con losas blancas o friso blanco/crema/salmón con paneles turquesa, balcones corridos, y muros de parcela pintados con portón metálico y grafitis" }
+    ],
     "hitos": {
       "w382327814": { "nombre": "Sede UNEFA (Av. La Estancia, Chuao)", "modelo": "unefa", "altura": 64,
                       "mira_hacia": [-1051, -120], "retiro_atras": 22,
@@ -122,6 +134,9 @@
       "Cam_Plataforma": { "pos": [-709, 34, 1.7], "ojo": true, "mira": [0, -100, 5], "lente": 22 },
       "Cam_Aeronaves": { "pos": [770, -165, 1.7], "ojo": true, "mira": [870, -95, 2], "lente": 26 },
       "Cam_Torre": { "pos": [-640, -60, 12], "mira": [-693, 7, 14], "lente": 24 },
+      "Cam_Chuao_RioJaneiro": { "pos": [-103.8, -132.7, 1.7], "ojo": true, "mira": [200, -320, 14], "mira_suelo": true, "lente": 20 },
+      "Cam_Chuao_Araure": { "pos": [-380.1, -233.6, 1.7], "ojo": true, "mira": [10, -328, 12], "mira_suelo": true, "lente": 20 },
+      "Cam_Chuao_desde_Base": { "pos": [-150, -40, 1.7], "ojo": true, "mira": [0, -300, 18], "mira_suelo": true, "lente": 24 },
       "Cam_UNEFA_Calle": { "pos": [-1051, -152, 1.7], "ojo": true, "mira": [-1051, -215, 24], "mira_suelo": true, "lente": 18 },
       "Cam_UNEFA_Pasarela": { "pos": [-1040, -150, 1.7], "ojo": true, "mira": [-1115, -152, 5], "mira_suelo": true, "lente": 20 },
       "Cam_Cubo_Negro": { "pos": [-990, -145, 1.7], "ojo": true, "mira": [-1052, -88, 20], "mira_suelo": true, "lente": 20 },
