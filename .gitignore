@@ -14,3 +14,6 @@ datos/_dem_cache/
 # Sistema
 Thumbs.db
 desktop.ini
+
+# Paquetes para copiar a otra PC (se regeneran con scripts/empaquetar_renders.py)
+paquetes/
